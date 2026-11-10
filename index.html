@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F7F9FB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1B2D" media="(prefers-color-scheme: dark)">
+<title>Grec au quotidien</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Commissioner:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F9FB;--surface:#FFFFFF;--ink:#14213D;--muted:#5B6779;--line:#D9E1EA;
+  --blue:#1D4E89;--on-blue:#FFFFFF;--blue-soft:#E4EDF7;--olive:#5E6E33;
+  --right:#3E7C4F;--right-soft:#E6F1E8;--wrong:#B23A48;--wrong-soft:#F8E6E8;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0F1B2D;--surface:#16263D;--ink:#E8EEF5;--muted:#9AA9BD;--line:#253650;
+    --blue:#8DB3E2;--on-blue:#0F1B2D;--blue-soft:#1C3352;--olive:#B3C27F;
+    --right:#7FC08F;--right-soft:#173826;--wrong:#E58A95;--wrong-soft:#3A1C24;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100%;background:var(--bg);color:var(--ink);
+  font-family:"Commissioner",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:17px;line-height:1.5;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.gr{font-family:"GFS Didot","Noto Serif","Georgia",serif;font-weight:400}
+main{max-width:580px;margin:0 auto;padding:20px 20px 64px}
+h1,h2,h3{margin:0;font-weight:600;line-height:1.25}
+h2{font-size:22px}
+h3{font-size:17px}
+p{margin:.4em 0}
+.muted{color:var(--muted)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:disabled{cursor:default}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:8px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--blue);color:var(--on-blue);border:0;border-radius:999px;padding:13px 24px;font-weight:600;min-height:48px}
+.btn:disabled{opacity:.4}
+.btn.ghost{background:transparent;color:var(--blue);box-shadow:inset 0 0 0 1.5px var(--blue)}
+.btn.wide{width:100%}
+.link{background:none;border:0;padding:6px 0;color:var(--blue);font-weight:500;text-decoration:underline;text-underline-offset:3px}
+.actions{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:16px}
+
+/* Accueil */
+.hello{padding:28px 0 20px}
+.hello .word{font-size:clamp(56px,17vw,88px);line-height:1;letter-spacing:-.01em}
+.hello .sub{color:var(--muted);margin-top:8px}
+.streak{margin-top:16px;font-weight:500}
+.streak b{color:var(--olive);font-weight:600}
+.lead{font-size:19px}
+.today{background:var(--blue-soft);border-radius:24px;padding:24px;margin:8px 0 28px}
+.today .kicker{color:var(--blue);font-weight:600;margin:0 0 4px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+.row p{color:var(--muted);margin:2px 0 0}
+.lvl{margin-top:30px}
+.lvl h3{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.lvl h3 span{font-weight:400;color:var(--muted);font-size:15px}
+.path{list-style:none;margin:8px 0 0;padding:0}
+.path li{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--line);color:var(--muted);min-height:52px}
+.path .num{width:40px;font-size:20px;flex:none}
+.path .pt{flex:1}
+.path .st{font-size:14px;text-align:right}
+.path li.is-done{color:var(--ink)}
+.path li.is-done .num{color:var(--olive)}
+.path li.is-cur{color:var(--ink);font-weight:600}
+.path li.is-cur .num{color:var(--blue)}
+.tag{font-size:14px;font-weight:600;color:var(--blue)}
+.tag.weak{color:var(--wrong)}
+.tag.ok{color:var(--olive)}
+footer{margin-top:36px;color:var(--muted);font-size:15px;display:grid;gap:6px}
+footer .link{color:var(--muted);font-size:15px;justify-self:start}
+
+/* Séance */
+.bar{display:flex;align-items:center;gap:14px;margin:4px 0 6px}
+.x{background:none;border:0;font-size:22px;width:44px;height:44px;border-radius:50%;color:var(--muted);flex:none}
+.track{flex:1;height:8px;border-radius:8px;background:var(--line);overflow:hidden}
+.track span{display:block;height:100%;background:var(--blue);border-radius:8px;transition:width .3s ease}
+.clock{font-size:14px;color:var(--muted);min-width:48px;text-align:right;font-variant-numeric:tabular-nums}
+.step{margin:0 0 26px 58px;font-size:14px;font-weight:600;color:var(--olive)}
+.ask{color:var(--muted);margin:0 0 10px}
+.big{font-size:clamp(46px,14vw,80px);line-height:1.1;margin:6px 0 10px;overflow-wrap:anywhere}
+.tr-big{font-size:20px;color:var(--muted);font-style:italic;margin:0}
+.fr-big{font-size:clamp(24px,7vw,32px);font-weight:500;line-height:1.25;margin:8px 0 14px}
+.sent{font-size:clamp(26px,7.5vw,34px);line-height:1.3;margin:6px 0 12px}
+.gq{font-size:clamp(26px,7.5vw,34px);line-height:1.35;margin:6px 0 4px}
+.blank{display:inline-block;min-width:2.4em;border-bottom:3px solid var(--blue);color:transparent}
+.hint{color:var(--muted);margin:2px 0 0}
+.qtext{font-size:21px;font-weight:500;line-height:1.35}
+.say{display:inline-flex;align-items:center;gap:8px;background:none;border:1.5px solid var(--line);border-radius:999px;padding:9px 16px;color:var(--blue);font-weight:500;margin-top:6px}
+.say svg{width:20px;height:20px}
+.play{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:28px;border-radius:24px;border:0;background:var(--blue-soft);color:var(--blue);font-weight:600;font-size:18px;margin:8px 0 6px}
+.play svg{width:28px;height:28px}
+.foot{margin-top:32px}
+.opts{display:grid;gap:10px;margin-top:24px}
+.opt{display:flex;align-items:center;gap:14px;text-align:left;width:100%;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;font-size:18px;min-height:56px;transition:background-color .15s,border-color .15s}
+.opt .gr{font-size:24px}
+.opt .k{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);font-size:13px;display:grid;place-items:center;color:var(--muted)}
+.opt em{color:var(--muted)}
+.opt:disabled{opacity:1}
+.opt.right{border-color:var(--right);background:var(--right-soft)}
+.opt.wrong{border-color:var(--wrong);background:var(--wrong-soft)}
+.fb{margin-top:22px;padding:18px;border-radius:18px;display:flex;flex-direction:column;gap:14px}
+.fb.ok{background:var(--right-soft)}
+.fb.ko{background:var(--wrong-soft)}
+.fb strong{font-size:18px}
+.fb.ok strong{color:var(--right)}
+.fb.ko strong{color:var(--wrong)}
+.fb-word{margin-top:4px}
+.fb-word .gr{font-size:22px}
+.fb-word .tr{color:var(--muted);font-style:italic}
+
+.sec{padding-top:40px}
+.sec h2{font-size:32px}
+.sec p{font-size:18px;color:var(--muted);max-width:30em}
+.sec .btn{margin-top:28px}
+
+.gram h2{font-size:26px;margin-bottom:8px}
+.conj{border-collapse:collapse;width:100%;margin:16px 0}
+.conj tr{cursor:pointer}
+.conj td{padding:10px 8px 10px 0;border-bottom:1px solid var(--line);vertical-align:baseline}
+.conj td.gr{font-size:22px;white-space:nowrap;padding-right:18px}
+.conj td.fr{color:var(--muted)}
+.note{background:var(--blue-soft);border-radius:14px;padding:14px 16px;margin:16px 0;font-size:16px}
+
+.built{min-height:72px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;padding:12px 0;border-bottom:2px solid var(--line);margin-top:18px}
+.bank{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.wt{font-family:"GFS Didot","Noto Serif",Georgia,serif;font-size:23px;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:8px 14px;min-height:48px}
+.wt.ghost{visibility:hidden}
+.built.ok{border-color:var(--right)}
+.built.ko{border-color:var(--wrong)}
+
+.dlg{display:grid;gap:14px;margin:18px 0}
+.ln .sp{font-size:14px;color:var(--olive);font-weight:600;margin:0}
+.ln .lg{display:block;text-align:left;background:none;border:0;padding:2px 0;font-size:24px;line-height:1.3}
+.ln .lf{color:var(--muted);margin:2px 0 0}
+
+.res{text-align:center;padding-top:44px}
+.res .big{color:var(--blue)}
+.res .score{font-size:56px;font-weight:600;line-height:1;margin:8px 0}
+.res p{max-width:30em;margin-left:auto;margin-right:auto}
+.res .actions{justify-content:center;margin-top:28px}
+
+/* Fiches */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin:16px 0 28px}
+.tile{display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:12px;text-align:left}
+.tile .L{font-size:30px;line-height:1.1}
+.tile .nm{font-size:14px;font-style:italic;color:var(--muted)}
+.tile .snd{font-size:14px;font-weight:500;line-height:1.3}
+details{border-bottom:1px solid var(--line);padding:4px 0}
+summary{cursor:pointer;padding:12px 0;font-weight:500}
+.page-title{font-size:26px;margin:4px 0 6px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+/* =====================================================================
+   CONTENU — pour ajouter une unité, copiez un bloc { t, w, g, ex, s, d }
+   w  : mots      [grec, transcription, français]
+   g  : fiche de grammaire { t:titre, p:texte, tb:[[grec, français]], n:note }
+   ex : exercices [phrase avec ___, traduction, bonne réponse, mauvaises…]
+   s  : phrases à reconstruire [grec, français]
+   d  : dialogue [personnage, grec, français]
+   ===================================================================== */
+const ALPHA = [
+  ["Α α","álfa","a","άλφα"],["Β β","víta","v","βήτα"],["Γ γ","gháma","gh doux, y devant e et i","γάμμα"],
+  ["Δ δ","dhélta","dh, comme « this » en anglais","δέλτα"],["Ε ε","épsilon","é","έψιλον"],["Ζ ζ","zíta","z","ζήτα"],
+  ["Η η","íta","i","ήτα"],["Θ θ","thíta","th, comme « think » en anglais","θήτα"],["Ι ι","yóta","i","γιώτα"],
+  ["Κ κ","kápa","k","κάππα"],["Λ λ","lámdha","l","λάμδα"],["Μ μ","mi","m","μι"],
+  ["Ν ν","ni","n","νι"],["Ξ ξ","ksi","ks","ξι"],["Ο ο","ómikron","o","όμικρον"],
+  ["Π π","pi","p","πι"],["Ρ ρ","ro","r roulé","ρο"],["Σ σ ς","sígma","s (ς en fin de mot)","σίγμα"],
+  ["Τ τ","taf","t","ταυ"],["Υ υ","ípsilon","i","ύψιλον"],["Φ φ","fi","f","φι"],
+  ["Χ χ","khi","kh, comme la jota espagnole","χι"],["Ψ ψ","psi","ps","ψι"],["Ω ω","oméga","o","ωμέγα"]
+];
+const COMBOS = [["ου","ou","ουρανός"],["αι","é","είμαι"],["ει, οι","i","εκεί"],["αυ","av ou af","αύριο"],["ευ","év ou éf","ευρώ"],["μπ","b","μπλε"],["ντ","d","πέντε"],["γκ, γγ","g","συγγνώμη"]];
+
+const LEVELS = [
+{name:"L’alphabet", tag:"Découverte", units:[
+  {t:"Les lettres de Α à Μ", alpha:[0,12],
+   w:[["ταξί","taksí","taxi"],["καφές","kafés","café"],["μετρό","metró","métro"],["κιθάρα","kithára","guitare"],["θέατρο","théatro","théâtre"],["δελφίνι","dhelfíni","dauphin"],["ζέβρα","zévra","zèbre"],["γάλα","ghála","lait"]],
+   g:{t:"Lire l’accent",p:"Tous les mots grecs de plus d’une syllabe portent un accent écrit (΄). Il indique la syllabe à appuyer : καφές se dit ka-FÈS. Trois lettres se lisent « i » : η, ι et υ. Le γ devant e ou i se lit comme un « y ».",
+      tb:[["καφές","ka-FÈS"],["θέατρο","THÉ-a-tro"],["γάλα","GHA-la"],["γεια","ya"]],n:"Touchez une ligne pour l’écouter."},
+   ex:[["Quelle lettre se lit « i » ?","","η","ε","α"],["Dans « καφές », quelle syllabe est accentuée ?","","fès","ka","les deux"],["Devant ε ou ι, le γ se prononce…","","y","g dur","k"],["Quelle lettre se lit « th », comme dans « think » ?","","θ","δ","τ"],["Quelle lettre se lit « v » ?","","β","μ","δ"]]},
+  {t:"Les lettres de Ν à Ω", alpha:[12,24],
+   w:[["μουσική","moussikí","musique"],["σοκολάτα","sokoláta","chocolat"],["πίτσα","pítsa","pizza"],["τηλέφωνο","tiléfono","téléphone"],["φωτογραφία","fotoghrafía","photographie"],["ψυχολογία","psikholoyía","psychologie"],["μπανάνα","banána","banane"],["ντομάτα","domáta","tomate"]],
+   g:{t:"Les lettres qui vont par deux",p:"Certaines paires de lettres font un seul son. Le σ s’écrit ς à la fin d’un mot.",
+      tb:[["ου","ou"],["αι","é"],["ει, οι","i"],["αυ, ευ","av, év (af, éf devant certaines consonnes)"],["μπ","b"],["ντ","d"],["γκ, γγ","g"]],n:"Exemple : μπανάνα se lit banána, ντομάτα se lit domáta."},
+   ex:[["« ου » se prononce…","","ou","o-u","u"],["« μπ » en début de mot se prononce…","","b","mp","p"],["« αι » se prononce…","","é","a-i","aï"],["Quelle est la bonne écriture de « kafés » ?","","καφές","καφέσ","καφεσ"],["« ντ » se prononce…","","d","nt","t"]]}
+]},
+{name:"Débutant", tag:"A1", units:[
+  {t:"Bonjour !",
+   w:[["γεια σου","ya sou","salut, au revoir (tu)"],["γεια σας","ya sas","bonjour, au revoir (vous)"],["καλημέρα","kaliméra","bonjour (le matin)"],["καλησπέρα","kalispéra","bonsoir"],["καληνύχτα","kaliníkhta","bonne nuit"],["ευχαριστώ","efkharistó","merci"],["παρακαλώ","parakaló","s’il vous plaît, de rien"],["ναι","né","oui"],["όχι","ókhi","non"],["συγγνώμη","sighnómi","pardon"]],
+   g:{t:"Tu ou vous ?",p:"Comme en français, on tutoie ses proches et on vouvoie par politesse. Γεια σου s’adresse à une personne qu’on tutoie, γεια σας à une personne qu’on vouvoie ou à plusieurs personnes. Attention : le point d’interrogation grec s’écrit « ; ».",
+      tb:[["Γεια σου! Τι κάνεις;","Salut ! Comment vas-tu ?"],["Γεια σας! Τι κάνετε;","Bonjour ! Comment allez-vous ?"]]},
+   ex:[["Γεια ___, κύριε Παπαδόπουλε!","Bonjour, monsieur Papadopoulos !","σας","σου","μου"],["Γεια ___, Μαρία!","Salut, Maria !","σου","σας","μου"],["Τι ___; (à un ami)","Comment vas-tu ?","κάνεις","κάνετε","κάνω"],["Τι ___; (à une dame âgée)","Comment allez-vous ?","κάνετε","κάνεις","κάνει"],["Ευχαριστώ! ___!","Merci ! De rien !","Παρακαλώ","Συγγνώμη","Καληνύχτα"]],
+   s:[["Καλημέρα, τι κάνεις;","Bonjour, comment vas-tu ?"],["Καλά, ευχαριστώ.","Bien, merci."],["Γεια σας, τι κάνετε;","Bonjour, comment allez-vous ?"],["Συγγνώμη, δεν καταλαβαίνω.","Pardon, je ne comprends pas."]],
+   d:[["Νίκος","Καλημέρα, Άννα!","Bonjour, Anna !"],["Άννα","Καλημέρα, Νίκο! Τι κάνεις;","Bonjour, Nikos ! Comment vas-tu ?"],["Νίκος","Καλά, ευχαριστώ. Εσύ;","Bien, merci. Et toi ?"],["Άννα","Πολύ καλά!","Très bien !"],["Νίκος","Γεια σου!","Au revoir !"]]},
+  {t:"Qui es-tu ?",
+   w:[["εγώ","egó","moi, je"],["εσύ","essí","toi, tu"],["αυτός","aftós","lui, il"],["αυτή","aftí","elle"],["είμαι","íme","je suis"],["Γάλλος","ghálos","Français"],["Γαλλίδα","ghalídha","Française"],["η Γαλλία","i ghalía","la France"],["η Ελλάδα","i eládha","la Grèce"],["με λένε","me léne","je m’appelle"]],
+   g:{t:"Le verbe être : είμαι",p:"Le pronom est souvent omis, car la terminaison du verbe suffit : Είμαι Γάλλος veut dire « je suis français ».",
+      tb:[["(εγώ) είμαι","je suis"],["(εσύ) είσαι","tu es"],["(αυτός, αυτή) είναι","il, elle est"],["(εμείς) είμαστε","nous sommes"],["(εσείς) είστε","vous êtes"],["(αυτοί) είναι","ils, elles sont"]]},
+   ex:[["Εγώ ___ Γάλλος.","Je suis français.","είμαι","είσαι","είναι"],["Εσύ ___ από την Ελλάδα;","Es-tu de Grèce ?","είσαι","είμαι","είστε"],["Η Μαρία ___ Ελληνίδα.","Maria est grecque.","είναι","είμαστε","είσαι"],["Εμείς ___ φίλοι.","Nous sommes amis.","είμαστε","είστε","είναι"],["Εσείς ___ από τη Γαλλία;","Êtes-vous de France ?","είστε","είμαστε","είσαι"]],
+   s:[["Με λένε Πέτρο.","Je m’appelle Pierre."],["Είμαι από τη Γαλλία.","Je viens de France."],["Είσαι από την Ελλάδα;","Es-tu de Grèce ?"],["Αυτή είναι η Μαρία.","Voici Maria."]],
+   d:[["Ελένη","Γεια σου! Πώς σε λένε;","Salut ! Comment t’appelles-tu ?"],["Πέτρος","Με λένε Πέτρο. Εσένα;","Je m’appelle Pierre. Et toi ?"],["Ελένη","Με λένε Ελένη. Είσαι Γάλλος;","Je m’appelle Hélène. Tu es français ?"],["Πέτρος","Ναι, είμαι από το Παρίσι.","Oui, je suis de Paris."],["Ελένη","Χαίρω πολύ!","Enchantée !"]]},
+  {t:"Les nombres",
+   w:[["ένα","éna","un"],["δύο","dhío","deux"],["τρία","tría","trois"],["τέσσερα","téssera","quatre"],["πέντε","pénde","cinq"],["έξι","éksi","six"],["επτά","eptá","sept"],["οχτώ","okhtó","huit"],["εννιά","enniá","neuf"],["δέκα","dhéka","dix"]],
+   g:{t:"Les trois genres : ο, η, το",p:"Le grec a trois genres : masculin, féminin et neutre. La terminaison aide souvent : -ος, -ας, -ης pour le masculin, -α, -η pour le féminin, -ο, -ι, -μα pour le neutre.",
+      tb:[["ο καφές","le café (masculin)"],["η θάλασσα","la mer (féminin)"],["το νερό","l’eau (neutre)"]]},
+   ex:[["___ καφές","le café","ο","η","το"],["___ θάλασσα","la mer","η","ο","το"],["___ νερό","l’eau","το","ο","η"],["___ σπίτι","la maison","το","η","ο"],["___ δρόμος","la rue","ο","η","το"],["___ Ελλάδα","la Grèce","η","το","ο"]],
+   s:[["Έχω δύο παιδιά.","J’ai deux enfants."],["Ένας καφές, παρακαλώ.","Un café, s’il vous plaît."],["Πόσο κάνει;","Combien ça coûte ?"],["Κάνει πέντε ευρώ.","Ça fait cinq euros."]],
+   d:[["Πελάτης","Ένα νερό και ένας καφές, παρακαλώ.","Une eau et un café, s’il vous plaît."],["Σερβιτόρος","Αμέσως! Τίποτα άλλο;","Tout de suite ! Autre chose ?"],["Πελάτης","Όχι, ευχαριστώ. Πόσο κάνει;","Non, merci. Combien ça coûte ?"],["Σερβιτόρος","Τέσσερα ευρώ.","Quatre euros."]]},
+  {t:"La famille",
+   w:[["η μητέρα","i mitéra","la mère"],["ο πατέρας","o patéras","le père"],["ο αδελφός","o adhelfós","le frère"],["η αδελφή","i adhelfí","la sœur"],["το παιδί","to pedhí","l’enfant"],["ο γιος","o yos","le fils"],["η κόρη","i kóri","la fille"],["ο άντρας","o ándras","l’homme, le mari"],["η γυναίκα","i yinéka","la femme"],["η οικογένεια","i ikoyénia","la famille"]],
+   g:{t:"Mon, ton, son : μου, σου…",p:"Le possessif se place après le nom, et on garde l’article : η μητέρα μου, « ma mère ».",
+      tb:[["η μητέρα μου","ma mère"],["ο πατέρας σου","ton père"],["το παιδί του","son enfant (à lui)"],["το παιδί της","son enfant (à elle)"],["το σπίτι μας","notre maison"],["το σπίτι σας","votre maison"],["το σπίτι τους","leur maison"]]},
+   ex:[["η μητέρα ___","ma mère","μου","σου","της"],["ο πατέρας ___","ton père","σου","μου","μας"],["το παιδί ___","notre enfant","μας","σας","μου"],["η αδελφή ___ (à elle)","sa sœur (à elle)","της","του","τους"],["ο γιος ___ (à lui)","son fils (à lui)","του","της","σου"]],
+   s:[["Αυτή είναι η μητέρα μου.","Voici ma mère."],["Έχεις αδέλφια;","As-tu des frères et sœurs ?"],["Ο αδελφός μου είναι στην Αθήνα.","Mon frère est à Athènes."],["Έχω έναν γιο και μία κόρη.","J’ai un fils et une fille."]],
+   d:[["Σοφία","Ποιος είναι αυτός στη φωτογραφία;","Qui est-ce sur la photo ?"],["Μάρκος","Είναι ο πατέρας μου.","C’est mon père."],["Σοφία","Και αυτή;","Et elle ?"],["Μάρκος","Η αδελφή μου, η Κατερίνα.","Ma sœur, Katerina."],["Σοφία","Ωραία οικογένεια!","Belle famille !"]]},
+  {t:"Au café",
+   w:[["ο καφές","o kafés","le café"],["το νερό","to neró","l’eau"],["το τσάι","to tsái","le thé"],["η μπίρα","i bíra","la bière"],["το κρασί","to krassí","le vin"],["το ψωμί","to psomí","le pain"],["το γλυκό","to ghlikó","le dessert"],["θέλω","thélo","je veux"],["πίνω","píno","je bois"],["ο λογαριασμός","o logharyasmós","l’addition"]],
+   g:{t:"Les verbes en -ω : θέλω",p:"La plupart des verbes grecs se terminent par -ω. Ils se conjuguent tous sur ce modèle, comme πίνω (je bois) et έχω (j’ai).",
+      tb:[["θέλω","je veux"],["θέλεις","tu veux"],["θέλει","il, elle veut"],["θέλουμε","nous voulons"],["θέλετε","vous voulez"],["θέλουν","ils, elles veulent"]]},
+   ex:[["Εγώ ___ ένα νερό.","Je veux une eau.","θέλω","θέλει","θέλουμε"],["Τι ___; (toi)","Que veux-tu ?","θέλεις","θέλετε","θέλω"],["Η Άννα ___ τσάι.","Anna boit du thé.","πίνει","πίνω","πίνουν"],["Εμείς ___ δύο μπίρες.","Nous voulons deux bières.","θέλουμε","θέλετε","θέλουν"],["Εσείς τι ___;","Et vous, que buvez-vous ?","πίνετε","πίνεις","πίνουμε"],["Αυτοί ___ ένα παιδί.","Ils ont un enfant.","έχουν","έχει","έχουμε"]],
+   s:[["Θέλω έναν καφέ, παρακαλώ.","Je voudrais un café, s’il vous plaît."],["Τι θέλετε να πιείτε;","Que voulez-vous boire ?"],["Πίνω νερό.","Je bois de l’eau."],["Τον λογαριασμό, παρακαλώ.","L’addition, s’il vous plaît."]],
+   d:[["Σερβιτόρα","Καλησπέρα! Τι θα πάρετε;","Bonsoir ! Que prendrez-vous ?"],["Λουκάς","Ένα κρασί και ένα νερό, παρακαλώ.","Un vin et une eau, s’il vous plaît."],["Σερβιτόρα","Θέλετε και κάτι να φάτε;","Voulez-vous aussi quelque chose à manger ?"],["Λουκάς","Ναι, ένα γλυκό.","Oui, un dessert."],["Σερβιτόρα","Μάλιστα!","Très bien !"]]},
+  {t:"En ville",
+   w:[["η πόλη","i póli","la ville"],["ο δρόμος","o dhrómos","la rue, la route"],["το σπίτι","to spíti","la maison"],["η θάλασσα","i thálassa","la mer"],["η παραλία","i paralía","la plage"],["το ξενοδοχείο","to ksenodhokhío","l’hôtel"],["το μουσείο","to moussío","le musée"],["το εστιατόριο","to estiatório","le restaurant"],["εδώ","edhó","ici"],["εκεί","ekí","là-bas"]],
+   g:{t:"Où ? et la négation",p:"Πού είναι…; veut dire « Où est… ? ». Pour dire « ne… pas », on place δεν devant le verbe. Υπάρχει veut dire « il y a ».",
+      tb:[["Πού είναι η παραλία;","Où est la plage ?"],["Δεν ξέρω.","Je ne sais pas."],["Δεν είναι εδώ.","Ce n’est pas ici."],["Υπάρχει ένα μουσείο.","Il y a un musée."]]},
+   ex:[["___ είναι το μουσείο;","Où est le musée ?","Πού","Πώς","Πότε"],["___ ξέρω.","Je ne sais pas.","Δεν","Όχι","Ναι"],["Το ξενοδοχείο είναι ___.","L’hôtel est ici.","εδώ","εκεί","πού"],["___ ένα εστιατόριο εδώ;","Y a-t-il un restaurant ici ?","Υπάρχει","Είμαι","Θέλω"],["Η παραλία δεν είναι εδώ, είναι ___.","La plage n’est pas ici, elle est là-bas.","εκεί","εδώ","πού"]],
+   s:[["Πού είναι η παραλία;","Où est la plage ?"],["Δεν ξέρω.","Je ne sais pas."],["Το ξενοδοχείο είναι εκεί.","L’hôtel est là-bas."],["Υπάρχει ένα καλό εστιατόριο εδώ;","Y a-t-il un bon restaurant ici ?"]],
+   d:[["Τουρίστρια","Συγγνώμη, πού είναι το μουσείο;","Pardon, où est le musée ?"],["Κύριος","Είναι εκεί, δεξιά.","C’est là-bas, à droite."],["Τουρίστρια","Είναι μακριά;","C’est loin ?"],["Κύριος","Όχι, πέντε λεπτά.","Non, cinq minutes."],["Τουρίστρια","Ευχαριστώ πολύ!","Merci beaucoup !"]]}
+]},
+{name:"Élémentaire", tag:"A1+", units:[
+  {t:"Ma journée",
+   w:[["μιλάω","miláo","je parle"],["ρωτάω","rotáo","je demande"],["αγαπάω","aghapáo","j’aime (quelqu’un)"],["ξυπνάω","ksipnáo","je me réveille"],["δουλεύω","dhoulévo","je travaille"],["διαβάζω","dhiavázo","je lis, j’étudie"],["τρώω","tróo","je mange"],["το πρωί","to proí","le matin"],["το βράδυ","to vrádhi","le soir"],["σήμερα","símera","aujourd’hui"]],
+   g:{t:"Les verbes en -άω : μιλάω",p:"Certains verbes se terminent par -άω, avec l’accent sur la fin. Ils ont leur propre modèle de conjugaison.",
+      tb:[["μιλάω","je parle"],["μιλάς","tu parles"],["μιλάει","il, elle parle"],["μιλάμε","nous parlons"],["μιλάτε","vous parlez"],["μιλάνε","ils, elles parlent"]]},
+   ex:[["Εγώ ___ γαλλικά.","Je parle français.","μιλάω","μιλάς","μιλάνε"],["Εσύ ___ ελληνικά;","Tu parles grec ?","μιλάς","μιλάει","μιλάτε"],["Η Ελένη ___ στις επτά.","Hélène se réveille à sept heures.","ξυπνάει","ξυπνάω","ξυπνάμε"],["Εμείς ___ την Ελλάδα.","Nous aimons la Grèce.","αγαπάμε","αγαπάτε","αγαπάνε"],["Εσείς ___ αγγλικά;","Parlez-vous anglais ?","μιλάτε","μιλάμε","μιλάς"]],
+   s:[["Μιλάω λίγα ελληνικά.","Je parle un peu grec."],["Το πρωί πίνω καφέ.","Le matin, je bois un café."],["Δουλεύω σε ένα γραφείο.","Je travaille dans un bureau."],["Το βράδυ διαβάζω.","Le soir, je lis."]],
+   d:[["Γιάννης","Τι ώρα ξυπνάς;","À quelle heure te réveilles-tu ?"],["Κλαίρη","Στις επτά. Μετά πίνω καφέ.","À sept heures. Ensuite, je bois un café."],["Γιάννης","Δουλεύεις το πρωί;","Tu travailles le matin ?"],["Κλαίρη","Ναι, και το βράδυ διαβάζω ελληνικά!","Oui, et le soir j’étudie le grec !"]]},
+  {t:"Les jours et l’heure",
+   w:[["η Δευτέρα","i dheftéra","lundi"],["η Τρίτη","i tríti","mardi"],["η Τετάρτη","i tetárti","mercredi"],["η Πέμπτη","i pémpti","jeudi"],["η Παρασκευή","i paraskeví","vendredi"],["το Σάββατο","to sávato","samedi"],["η Κυριακή","i kiriakí","dimanche"],["η ώρα","i óra","l’heure"],["αύριο","ávrio","demain"],["τώρα","tóra","maintenant"]],
+   g:{t:"Le complément : τον, τη, το",p:"Quand un nom est complément d’un verbe, son article change : ο devient τον, η devient τη (ou την), το ne change pas. Avec un jour, l’article seul veut dire « ce jour-là » : την Κυριακή, « dimanche ».",
+      tb:[["Βλέπω τον φίλο μου.","Je vois mon ami."],["Θέλω τη σαλάτα.","Je veux la salade."],["Έχω το κλειδί.","J’ai la clé."],["Την Κυριακή…","Dimanche…"]]},
+   ex:[["Βλέπω ___ φίλο μου.","Je vois mon ami.","τον","ο","τη"],["Θέλω ___ σαλάτα.","Je veux la salade.","τη","η","τον"],["___ Δευτέρα δουλεύω.","Le lundi, je travaille.","Τη","Η","Τον"],["Έχω ___ κλειδί.","J’ai la clé.","το","τον","τη"],["Πίνω ___ καφέ μου.","Je bois mon café.","τον","ο","τη"]],
+   s:[["Τι ώρα είναι;","Quelle heure est-il ?"],["Είναι τρεις η ώρα.","Il est trois heures."],["Την Κυριακή πάμε στη θάλασσα.","Le dimanche, nous allons à la mer."],["Αύριο είναι Παρασκευή.","Demain, c’est vendredi."]],
+   d:[["Μαρία","Είσαι ελεύθερος την Πέμπτη;","Tu es libre jeudi ?"],["Αλέξης","Όχι, δουλεύω. Το Σάββατο;","Non, je travaille. Samedi ?"],["Μαρία","Εντάξει. Τι ώρα;","D’accord. À quelle heure ?"],["Αλέξης","Στις οχτώ το βράδυ.","À huit heures du soir."]]},
+  {t:"Faire les courses",
+   w:[["το ψάρι","to psári","le poisson"],["το κρέας","to kréas","la viande"],["το τυρί","to tirí","le fromage"],["τα φρούτα","ta froúta","les fruits"],["το μήλο","to mílo","la pomme"],["η ντομάτα","i domáta","la tomate"],["το αυγό","to avghó","l’œuf"],["το λάδι","to ládhi","l’huile"],["το κιλό","to kiló","le kilo"],["αγοράζω","aghorázo","j’achète"]],
+   g:{t:"Le pluriel",p:"Au pluriel, ο et η deviennent οι, το devient τα. La fin du nom change aussi selon sa terminaison.",
+      tb:[["ο φίλος → οι φίλοι","l’ami → les amis"],["η ντομάτα → οι ντομάτες","la tomate → les tomates"],["το μήλο → τα μήλα","la pomme → les pommes"],["το παιδί → τα παιδιά","l’enfant → les enfants"]]},
+   ex:[["το μήλο → ___ μήλα","la pomme → les pommes","τα","οι","το"],["η ντομάτα → οι ___","la tomate → les tomates","ντομάτες","ντομάτα","ντομάτοι"],["ο φίλος → οι ___","l’ami → les amis","φίλοι","φίλες","φίλα"],["το παιδί → τα ___","l’enfant → les enfants","παιδιά","παιδί","παιδοί"],["το αυγό → τα ___","l’œuf → les œufs","αυγά","αυγοί","αυγές"]],
+   s:[["Θέλω ένα κιλό ντομάτες.","Je voudrais un kilo de tomates."],["Πόσο κάνουν τα μήλα;","Combien coûtent les pommes ?"],["Αγοράζω ψωμί και τυρί.","J’achète du pain et du fromage."],["Έχετε φρέσκο ψάρι;","Avez-vous du poisson frais ?"]],
+   d:[["Πωλητής","Τι θέλετε;","Que désirez-vous ?"],["Κλαίρη","Δύο κιλά μήλα και έξι αυγά.","Deux kilos de pommes et six œufs."],["Πωλητής","Τίποτα άλλο;","Autre chose ?"],["Κλαίρη","Όχι. Πόσο κάνουν;","Non. Combien ça fait ?"],["Πωλητής","Επτά ευρώ.","Sept euros."]]},
+  {t:"Décrire",
+   w:[["μεγάλος","meghálos","grand"],["μικρός","mikrós","petit"],["καλός","kalós","bon"],["ωραίος","oréos","beau"],["ζεστός","zestós","chaud"],["κρύος","kríos","froid"],["καινούργιος","kenoúryos","nouveau"],["παλιός","paliós","vieux"],["ακριβός","akrivós","cher"],["φτηνός","ftinós","bon marché"]],
+   g:{t:"L’accord de l’adjectif",p:"L’adjectif s’accorde avec le nom : -ος au masculin, -η au féminin, -ο au neutre. Après une voyelle, le féminin se termine en -α : ωραία, παλιά.",
+      tb:[["ο μεγάλος δρόμος","la grande rue"],["η μεγάλη πόλη","la grande ville"],["το μεγάλο σπίτι","la grande maison"],["η ωραία θάλασσα","la belle mer"]]},
+   ex:[["η ___ πόλη","la grande ville","μεγάλη","μεγάλος","μεγάλο"],["το ___ σπίτι","la petite maison","μικρό","μικρή","μικρός"],["ο ___ καφές","le café chaud","ζεστός","ζεστή","ζεστό"],["η ___ θάλασσα","la belle mer","ωραία","ωραίος","ωραίο"],["το ___ ξενοδοχείο","l’hôtel cher","ακριβό","ακριβή","ακριβός"]],
+   s:[["Το σπίτι είναι μεγάλο.","La maison est grande."],["Η θάλασσα είναι κρύα.","La mer est froide."],["Αυτό το ξενοδοχείο είναι ακριβό.","Cet hôtel est cher."],["Έχω ένα καινούργιο αυτοκίνητο.","J’ai une nouvelle voiture."]],
+   d:[["Νίκος","Πώς είναι το ξενοδοχείο σου;","Comment est ton hôtel ?"],["Λένα","Είναι μικρό αλλά ωραίο.","Il est petit mais beau."],["Νίκος","Είναι ακριβό;","Il est cher ?"],["Λένα","Όχι, είναι φτηνό!","Non, il est bon marché !"]]},
+  {t:"Voyager",
+   w:[["πάω","páo","je vais"],["έρχομαι","érkhome","je viens"],["το αεροπλάνο","to aeropláno","l’avion"],["το πλοίο","to plío","le bateau"],["το λεωφορείο","to leoforío","le bus"],["το αυτοκίνητο","to aftokínito","la voiture"],["το εισιτήριο","to issitírio","le billet"],["το λιμάνι","to limáni","le port"],["το νησί","to nissí","l’île"],["το αεροδρόμιο","to aerodhrómio","l’aéroport"]],
+   g:{t:"Aller à : σε + article",p:"La préposition σε (à, dans) se colle à l’article : σε + το donne στο, σε + τη donne στη, σε + τον donne στον. Les villes prennent un article : στην Αθήνα.",
+      tb:[["Πάω στο νησί.","Je vais sur l’île."],["Πάω στη θάλασσα.","Je vais à la mer."],["Πάω στον Πειραιά.","Je vais au Pirée."],["πάω, πας, πάει","je vais, tu vas, il va"],["πάμε, πάτε, πάνε","nous allons, vous allez, ils vont"]]},
+   ex:[["Πάω ___ λιμάνι.","Je vais au port.","στο","στη","στον"],["Πάμε ___ θάλασσα.","Allons à la mer.","στη","στο","στον"],["Είμαι ___ αεροδρόμιο.","Je suis à l’aéroport.","στο","στη","σε"],["Πού ___; (toi)","Où vas-tu ?","πας","πάω","πάνε"],["Αυτοί ___ στη Σαντορίνη.","Ils vont à Santorin.","πάνε","πάμε","πάει"]],
+   s:[["Πάω στο νησί με το πλοίο.","Je vais sur l’île en bateau."],["Ένα εισιτήριο για τη Νάξο, παρακαλώ.","Un billet pour Naxos, s’il vous plaît."],["Πού είναι το λεωφορείο;","Où est le bus ?"],["Το πλοίο φεύγει στις δέκα.","Le bateau part à dix heures."]],
+   d:[["Ταξιδιώτης","Ένα εισιτήριο για την Πάρο, παρακαλώ.","Un billet pour Paros, s’il vous plaît."],["Υπάλληλος","Για σήμερα;","Pour aujourd’hui ?"],["Ταξιδιώτης","Ναι. Τι ώρα φεύγει το πλοίο;","Oui. À quelle heure part le bateau ?"],["Υπάλληλος","Στις τρεις, από το λιμάνι του Πειραιά.","À trois heures, du port du Pirée."]]},
+  {t:"Demander poliment",
+   w:[["μπορώ","boró","je peux"],["πληρώνω","pliróno","je paie"],["η κάρτα","i kárta","la carte"],["το δωμάτιο","to dhomátio","la chambre"],["το κλειδί","to klidhí","la clé"],["ελεύθερος","eléftheros","libre"],["η βοήθεια","i voíthia","l’aide"],["ανοιχτός","anikhtós","ouvert"],["κλειστός","klistós","fermé"],["ο γιατρός","o yatrós","le médecin"]],
+   g:{t:"Pouvoir : μπορώ να…",p:"Le grec n’a pas d’infinitif. Après μπορώ (je peux), on ajoute να suivi du verbe conjugué : Μπορώ να πληρώσω ; « Puis-je payer ? ».",
+      tb:[["μπορώ, μπορείς, μπορεί","je peux, tu peux, il peut"],["μπορούμε, μπορείτε, μπορούν","nous pouvons, vous pouvez, ils peuvent"],["Μπορώ να πληρώσω με κάρτα;","Puis-je payer par carte ?"],["Μπορείτε να με βοηθήσετε;","Pouvez-vous m’aider ?"]]},
+   ex:[["Μπορώ ___ πληρώσω με κάρτα;","Puis-je payer par carte ?","να","θα","δεν"],["___ να με βοηθήσετε;","Pouvez-vous m’aider ?","Μπορείτε","Μπορώ","Μπορεί"],["Το μουσείο είναι ___ σήμερα.","Le musée est fermé aujourd’hui.","κλειστό","κλειστός","κλειστή"],["Δεν ___ να έρθω.","Je ne peux pas venir.","μπορώ","μπορείς","μπορούν"],["Έχετε ένα δωμάτιο ___;","Avez-vous une chambre libre ?","ελεύθερο","ελεύθερη","ελεύθερος"]],
+   s:[["Μπορώ να πληρώσω με κάρτα;","Puis-je payer par carte ?"],["Έχετε ένα ελεύθερο δωμάτιο;","Avez-vous une chambre libre ?"],["Μπορείτε να μιλάτε πιο αργά;","Pouvez-vous parler plus lentement ?"],["Χρειάζομαι έναν γιατρό.","J’ai besoin d’un médecin."]],
+   d:[["Πελάτισσα","Καλησπέρα. Έχετε ένα δωμάτιο για δύο νύχτες;","Bonsoir. Avez-vous une chambre pour deux nuits ?"],["Ρεσεψιόν","Ναι, έχουμε. Το όνομά σας;","Oui. Votre nom ?"],["Πελάτισσα","Ντιμπουά. Μπορώ να πληρώσω με κάρτα;","Dubois. Puis-je payer par carte ?"],["Ρεσεψιόν","Βεβαίως. Ορίστε το κλειδί σας.","Bien sûr. Voici votre clé."]]}
+]},
+{name:"Pré-intermédiaire", tag:"A2", units:[
+  {t:"Hier",
+   w:[["χθες","khthes","hier"],["πήγα","pígha","je suis allé"],["ήρθα","írtha","je suis venu"],["έφαγα","éfagha","j’ai mangé"],["ήπια","ípia","j’ai bu"],["είδα","ídha","j’ai vu"],["έκανα","ékana","j’ai fait"],["ήμουν","ímoun","j’étais"],["είπα","ípa","j’ai dit"],["πέρσι","pérsi","l’an dernier"]],
+   g:{t:"Le passé : l’aoriste",p:"Pour une action terminée, on utilise l’aoriste. Les terminaisons sont régulières : -α, -ες, -ε, -αμε, -ατε, -αν. Les verbes les plus courants ont un radical irrégulier à apprendre par cœur.",
+      tb:[["πήγα, πήγες, πήγε","je suis allé, tu es allé, il est allé"],["πήγαμε, πήγατε, πήγαν","nous sommes allés, vous êtes allés, ils sont allés"],["τρώω → έφαγα","manger"],["πίνω → ήπια","boire"],["βλέπω → είδα","voir"],["κάνω → έκανα","faire"],["είμαι → ήμουν","être"]]},
+   ex:[["Χθες ___ στη θάλασσα. (je)","Hier, je suis allé à la mer.","πήγα","πάω","θα πάω"],["Χθες ___ ψάρι. (nous)","Hier, nous avons mangé du poisson.","φάγαμε","τρώμε","έφαγα"],["Τι ___ χθες; (toi)","Qu’as-tu fait hier ?","έκανες","κάνεις","έκανα"],["Η Άννα ___ μια ταινία.","Anna a vu un film.","είδε","βλέπει","είδα"],["Πέρσι ___ στην Κρήτη. (je)","L’an dernier, j’étais en Crète.","ήμουν","είμαι","ήταν"]],
+   s:[["Χθες πήγα στο μουσείο.","Hier, je suis allé au musée."],["Φάγαμε σε μια ταβέρνα.","Nous avons mangé dans une taverne."],["Τι έκανες το Σάββατο;","Qu’as-tu fait samedi ?"],["Πέρσι ήμουν στην Κρήτη.","L’an dernier, j’étais en Crète."]],
+   d:[["Ελένη","Τι έκανες χθες;","Qu’as-tu fait hier ?"],["Πωλ","Πήγα στην Ακρόπολη με τη φίλη μου.","Je suis allé à l’Acropole avec mon amie."],["Ελένη","Ωραία! Και μετά;","Super ! Et après ?"],["Πωλ","Μετά φάγαμε σε μια ταβέρνα στην Πλάκα.","Après, nous avons mangé dans une taverne à Plaka."]]},
+  {t:"Demain",
+   w:[["θα","tha","(marque du futur)"],["μεθαύριο","methávrio","après-demain"],["το καλοκαίρι","to kalokéri","l’été"],["οι διακοπές","i dhiakopés","les vacances"],["ταξιδεύω","taksidhévo","je voyage"],["μένω","méno","je reste, j’habite"],["φεύγω","févgho","je pars"],["το σχέδιο","to skhédhio","le projet"],["ίσως","íssos","peut-être"],["κάθε μέρα","káthe méra","tous les jours"]],
+   g:{t:"Le futur : θα",p:"Pour parler du futur, on place θα devant le verbe. Pour une action ponctuelle, on utilise souvent le radical du passé sans le έ- du début.",
+      tb:[["θα πάω","j’irai"],["θα φάω","je mangerai"],["θα πιω","je boirai"],["θα δω","je verrai"],["θα κάνω","je ferai"],["θα είμαι","je serai"]]},
+   ex:[["Αύριο ___ πάω στην Αθήνα.","Demain, j’irai à Athènes.","θα","να","δεν"],["Θα ___ στην Ελλάδα το καλοκαίρι. (nous)","Nous irons en Grèce cet été.","πάμε","πήγαμε","πάω"],["Τι θα ___ αύριο; (toi)","Que feras-tu demain ?","κάνεις","έκανες","κάνατε"],["Θα ___ τον φίλο μου. (je)","Je verrai mon ami.","δω","είδα","δεις"],["Μεθαύριο θα ___ στο σπίτι. (je)","Après-demain, je serai à la maison.","είμαι","ήμουν","είναι"]],
+   s:[["Αύριο θα πάω στη θάλασσα.","Demain, j’irai à la mer."],["Το καλοκαίρι θα ταξιδέψουμε.","Cet été, nous voyagerons."],["Πότε θα φύγεις;","Quand partiras-tu ?"],["Θα μείνω μια εβδομάδα.","Je resterai une semaine."]],
+   d:[["Κώστας","Τι σχέδια έχεις για το καλοκαίρι;","Quels sont tes projets pour l’été ?"],["Ζιλιέτ","Θα πάω στη Νάξο με την οικογένειά μου.","J’irai à Naxos avec ma famille."],["Κώστας","Πόσο καιρό θα μείνετε;","Combien de temps resterez-vous ?"],["Ζιλιέτ","Δύο εβδομάδες. Θα κολυμπάμε κάθε μέρα!","Deux semaines. Nous nagerons tous les jours !"]]},
+  {t:"Les goûts",
+   w:[["μου αρέσει","mou arési","j’aime (ça me plaît)"],["η μουσική","i moussikí","la musique"],["το βιβλίο","to vivlío","le livre"],["η ταινία","i tenía","le film"],["ο χορός","o khorós","la danse"],["το φαγητό","to fayitó","la nourriture, le plat"],["ο καιρός","o kerós","le temps (météo)"],["πολύ","polí","beaucoup, très"],["λίγο","lígho","un peu"],["καθόλου","kathólou","pas du tout"]],
+   g:{t:"J’aime : μου αρέσει",p:"Littéralement « ça me plaît » : ce qu’on aime est le sujet du verbe. Au pluriel, αρέσει devient αρέσουν. La personne qui aime est indiquée par μου, σου, του, της, μας, σας, τους.",
+      tb:[["Μου αρέσει η θάλασσα.","J’aime la mer."],["Μου αρέσουν τα νησιά.","J’aime les îles."],["Σου αρέσει;","Ça te plaît ?"],["Δεν της αρέσει.","Elle n’aime pas."]]},
+   ex:[["Μου ___ η μουσική.","J’aime la musique.","αρέσει","αρέσουν","αρέσω"],["Μου ___ τα νησιά.","J’aime les îles.","αρέσουν","αρέσει","αρέσεις"],["___ αρέσει το κρασί; (toi)","Tu aimes le vin ?","Σου","Μου","Του"],["Δεν ___ αρέσει καθόλου. (à elle)","Elle n’aime pas du tout.","της","του","σας"],["___ αρέσει ο χορός. (nous)","Nous aimons la danse.","Μας","Σας","Τους"]],
+   s:[["Μου αρέσει πολύ η ελληνική μουσική.","J’aime beaucoup la musique grecque."],["Δεν μου αρέσει ο καφές.","Je n’aime pas le café."],["Σου αρέσουν τα βιβλία;","Tu aimes les livres ?"],["Μας αρέσει το ελληνικό φαγητό.","Nous aimons la cuisine grecque."]],
+   d:[["Άννα","Σου αρέσει η Ελλάδα;","Tu aimes la Grèce ?"],["Τομά","Πολύ! Μου αρέσουν τα νησιά και το φαγητό.","Beaucoup ! J’aime les îles et la nourriture."],["Άννα","Και η ελληνική μουσική;","Et la musique grecque ?"],["Τομά","Λίγο. Δεν μου αρέσει πολύ το μπουζούκι!","Un peu. Je n’aime pas trop le bouzouki !"]]},
+  {t:"La santé",
+   w:[["το κεφάλι","to kefáli","la tête"],["το στομάχι","to stomákhi","l’estomac"],["το πόδι","to pódhi","la jambe, le pied"],["το χέρι","to khéri","la main, le bras"],["πονάει","ponái","ça fait mal"],["άρρωστος","árostos","malade"],["το φαρμακείο","to farmakío","la pharmacie"],["το φάρμακο","to fármako","le médicament"],["ο πυρετός","o piretós","la fièvre"],["κουρασμένος","kourazménos","fatigué"]],
+   g:{t:"Me, te, le : les pronoms",p:"Les pronoms compléments se placent avant le verbe : με (me), σε (te), τον (le), την (la), το (le, neutre), μας (nous), σας (vous), τους (les). Pour dire qu’on a mal : Με πονάει το κεφάλι, « la tête me fait mal ».",
+      tb:[["Σε αγαπώ.","Je t’aime."],["Τον ξέρω.","Je le connais."],["Με πονάει το κεφάλι.","J’ai mal à la tête."],["Μπορείτε να με βοηθήσετε;","Pouvez-vous m’aider ?"]]},
+   ex:[["___ πονάει το κεφάλι. (moi)","J’ai mal à la tête.","Με","Σε","Τον"],["___ ξέρεις; (lui)","Tu le connais ?","Τον","Την","Το"],["Σε ___!","Je t’aime !","αγαπώ","αγαπάς","αγαπάει"],["Μπορείτε να ___ βοηθήσετε; (moi)","Pouvez-vous m’aider ?","με","σε","μας"],["Είμαι ___. (homme)","Je suis fatigué.","κουρασμένος","κουρασμένη","κουρασμένο"]],
+   s:[["Με πονάει το κεφάλι.","J’ai mal à la tête."],["Πού είναι το φαρμακείο;","Où est la pharmacie ?"],["Έχω πυρετό από χθες.","J’ai de la fièvre depuis hier."],["Είμαι πολύ κουρασμένη.","Je suis très fatiguée."]],
+   d:[["Φαρμακοποιός","Τι έχετε;","Qu’est-ce qui ne va pas ?"],["Πελάτης","Με πονάει το στομάχι από χθες.","J’ai mal à l’estomac depuis hier."],["Φαρμακοποιός","Έχετε πυρετό;","Avez-vous de la fièvre ?"],["Πελάτης","Όχι, αλλά είμαι κουρασμένος.","Non, mais je suis fatigué."],["Φαρμακοποιός","Πάρτε αυτό το φάρμακο δύο φορές τη μέρα.","Prenez ce médicament deux fois par jour."]]},
+  {t:"Le temps qu’il fait",
+   w:[["ο ήλιος","o ílios","le soleil"],["η βροχή","i vrokhí","la pluie"],["ο αέρας","o aéras","le vent"],["το χιόνι","to khióni","la neige"],["ο χειμώνας","o khimónas","l’hiver"],["η άνοιξη","i ániksi","le printemps"],["το φθινόπωρο","to fthinóporo","l’automne"],["βρέχει","vrékhi","il pleut"],["κάνει ζέστη","káni zésti","il fait chaud"],["κάνει κρύο","káni krío","il fait froid"]],
+   g:{t:"Comparer : πιο… από",p:"Pour dire « plus… que », on utilise πιο devant l’adjectif et από devant le second élément. Καλός a un comparatif irrégulier : καλύτερος (meilleur).",
+      tb:[["πιο ζεστός από…","plus chaud que…"],["Η Αθήνα είναι πιο μεγάλη από την Πάτρα.","Athènes est plus grande que Patras."],["ο πιο ωραίος","le plus beau"],["καλός → καλύτερος","bon → meilleur"]]},
+   ex:[["Ο Αύγουστος είναι ___ ζεστός από τον Μάιο.","Août est plus chaud que mai.","πιο","πολύ","από"],["Η Αθήνα είναι πιο μεγάλη ___ την Πάτρα.","Athènes est plus grande que Patras.","από","πιο","και"],["Αυτό το κρασί είναι ___ από εκείνο.","Ce vin est meilleur que celui-là.","καλύτερο","πιο","καλό"],["Σήμερα ___ κρύο.","Aujourd’hui, il fait froid.","κάνει","είναι","έχει"],["Τον χειμώνα ___ συχνά.","En hiver, il pleut souvent.","βρέχει","βροχή","κάνει"]],
+   s:[["Σήμερα κάνει πολύ ζέστη.","Aujourd’hui, il fait très chaud."],["Αύριο θα βρέξει.","Demain, il pleuvra."],["Η άνοιξη είναι πιο ωραία από τον χειμώνα.","Le printemps est plus beau que l’hiver."],["Τον χειμώνα κάνει κρύο.","En hiver, il fait froid."]],
+   d:[["Δήμητρα","Τι καιρό κάνει στο Παρίσι;","Quel temps fait-il à Paris ?"],["Λουίζ","Βρέχει και κάνει κρύο.","Il pleut et il fait froid."],["Δήμητρα","Εδώ στην Αθήνα έχει ήλιο!","Ici à Athènes, il y a du soleil !"],["Λουίζ","Τυχερή! Εκεί είναι πιο ωραία από εδώ.","Quelle chance ! C’est plus agréable qu’ici."]]},
+  {t:"Raconter",
+   w:[["και","ké","et"],["αλλά","alá","mais"],["γιατί","yatí","parce que, pourquoi"],["όταν","ótan","quand, lorsque"],["μετά","metá","après, ensuite"],["πριν","prin","avant"],["επίσης","epíssis","aussi, également"],["λοιπόν","lipón","donc, alors"],["πάντα","pánda","toujours"],["ποτέ","poté","jamais"]],
+   g:{t:"Relier ses phrases",p:"Ces petits mots permettent de raconter. Γιατί sert à la fois à demander « pourquoi ? » et à répondre « parce que ». Ποτέ s’utilise avec δεν : Δεν πίνω ποτέ καφέ.",
+      tb:[["Θέλω, αλλά δεν μπορώ.","Je veux, mais je ne peux pas."],["Μένω σπίτι γιατί βρέχει.","Je reste à la maison parce qu’il pleut."],["Όταν ήμουν παιδί…","Quand j’étais enfant…"],["Δεν πίνω ποτέ καφέ.","Je ne bois jamais de café."]]},
+   ex:[["Θέλω να έρθω, ___ δεν μπορώ.","Je veux venir, mais je ne peux pas.","αλλά","και","γιατί"],["Μένω σπίτι ___ βρέχει.","Je reste à la maison parce qu’il pleut.","γιατί","όταν","μετά"],["___ ήμουν παιδί, έμενα στη Λιόν.","Quand j’étais enfant, j’habitais à Lyon.","Όταν","Πότε","Γιατί"],["Δεν πίνω ___ καφέ.","Je ne bois jamais de café.","ποτέ","πάντα","πότε"],["Πρώτα τρώμε, ___ πάμε για ύπνο.","D’abord on mange, ensuite on va dormir.","μετά","πριν","αλλά"]],
+   s:[["Όταν ήμουν παιδί, πήγαινα στην Ελλάδα.","Quand j’étais enfant, j’allais en Grèce."],["Μου αρέσει, αλλά είναι ακριβό.","Ça me plaît, mais c’est cher."],["Δεν ήρθα γιατί ήμουν άρρωστος.","Je ne suis pas venu parce que j’étais malade."],["Μετά πήγαμε για φαγητό.","Ensuite, nous sommes allés manger."]],
+   d:[["Γιώργος","Γιατί μαθαίνεις ελληνικά;","Pourquoi apprends-tu le grec ?"],["Καμίλ","Γιατί πάω στην Ελλάδα κάθε καλοκαίρι.","Parce que je vais en Grèce chaque été."],["Γιώργος","Και πότε ξεκίνησες;","Et quand as-tu commencé ?"],["Καμίλ","Πριν από λίγο καιρό, αλλά μαθαίνω κάθε μέρα!","Il y a peu de temps, mais j’apprends tous les jours !"]]}
+]}
+];
+
+/* =====================================================================
+   INDEX
+   ===================================================================== */
+const UNITS=[];
+LEVELS.forEach((L,li)=>L.units.forEach((u,ui)=>{
+  u.id=li+"."+(ui+1);u.li=li;
+  u.words=(u.w||[]).map((w,j)=>({id:u.id+":"+j,gr:w[0],tr:w[1],fr:w[2],unit:u.id,li}));
+  u.letters=u.alpha?ALPHA.slice(u.alpha[0],u.alpha[1]).map((a,k)=>({id:"L"+(u.alpha[0]+k),gr:a[0],tr:a[1],fr:a[2],say:a[3],unit:u.id,li,letter:true})):[];
+  u.items=[...u.letters,...u.words];
+  UNITS.push(u);
+}));
+const UBY=Object.fromEntries(UNITS.map(u=>[u.id,u]));
+const ITEMS={};UNITS.forEach(u=>u.items.forEach(it=>ITEMS[it.id]=it));
+const ALL_LETTERS=UNITS.flatMap(u=>u.letters);
+const levelUnits=li=>UNITS.filter(u=>u.li===li);
+const levelWords=li=>levelUnits(li).flatMap(u=>u.words);
+const levelSentences=li=>levelUnits(li).flatMap(u=>(u.s||[]).map(s=>[s[0],s[1],u.id]));
+const levelExercises=li=>levelUnits(li).flatMap(u=>u.ex.map(e=>({e,uid:u.id})));
+const INTERVALS=[0,1,2,4,8,16,32];
+const KEY="grec-quotidien-v2";
+
+/* =====================================================================
+   PROGRESSION
+   ===================================================================== */
+function fresh(){return{placed:false,cards:{},units:{},exams:{},streak:0,last:null,dayDone:null,minutes:{},total:0}}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.cards)return Object.assign(fresh(),s)}catch(e){}return fresh()}
+let S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function today(o=0){const d=new Date();d.setDate(d.getDate()+o);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function parseDay(s){const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)}
+function markActive(){const t=today();if(S.last===t)return;S.streak=(S.last===today(-1))?S.streak+1:1;S.last=t}
+function currentStreak(){return(S.last===today()||S.last===today(-1))?S.streak:0}
+function dueItems(){const t=today();return Object.entries(S.cards).filter(([,c])=>c.due<=t).map(([id])=>ITEMS[id]).filter(Boolean)}
+function grade(it,ok){const c=S.cards[it.id]||{box:1};c.box=ok?Math.min(c.box+1,INTERVALS.length-1):1;c.due=today(INTERVALS[c.box]);S.cards[it.id]=c}
+function nextTask(){
+  for(let li=0;li<LEVELS.length;li++){
+    const us=levelUnits(li);
+    const nd=us.find(u=>!S.units[u.id]?.done);if(nd)return{type:"unit",uid:nd.id};
+    if(S.exams[li]?.passed)continue;
+    const wk=us.find(u=>S.units[u.id].weak);if(wk)return{type:"unit",uid:wk.id,redo:true,li};
+    return{type:"exam",li};
+  }
+  return null;
+}
+
+/* =====================================================================
+   VOIX
+   ===================================================================== */
+const canSpeak="speechSynthesis" in window;
+let elVoice=null;
+function pickVoice(){if(canSpeak)elVoice=speechSynthesis.getVoices().find(v=>/^el/i.test(v.lang))||null}
+if(canSpeak){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+function utter(t){const u=new SpeechSynthesisUtterance(t.replace(/;/g,"").replace(/\(.*?\)/g,""));u.lang="el-GR";if(elVoice)u.voice=elVoice;u.rate=.85;return u}
+function speak(t){if(!canSpeak||!t)return;speechSynthesis.cancel();speechSynthesis.speak(utter(t))}
+function speakAll(list){if(!canSpeak)return;speechSynthesis.cancel();list.forEach(t=>speechSynthesis.speak(utter(t)))}
+const ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
+const sayBtn=t=>canSpeak?`<button class="say" data-a="say" data-v="${t}">${ICON} Écouter</button>`:"";
+const playBtn=t=>`<button class="play" data-a="say" data-v="${t}">${ICON} Réécouter</button>`;
+
+/* =====================================================================
+   OUTILS
+   ===================================================================== */
+const GRK=/[\u0370-\u03FF\u1F00-\u1FFF]/;
+const G=t=>`<span class="gr" lang="el">${t}</span>`;
+const fmt=t=>GRK.test(t)?G(t):t;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function choice(ok,wrongs){return shuffle([{h:ok,ok:true},...wrongs.map(h=>({h,ok:false}))])}
+function spread(qs){let b=shuffle(qs);for(let t=0;t<30;t++){if(b.every((q,i)=>!i||!q.item||q.item!==b[i-1].item))break;b=shuffle(qs)}return b}
+function mk(s,extra){Object.assign(s,extra);if(s.idk)s.opts.push({h:"<em>Je ne sais pas</em>",ok:false});return s}
+const fmtMin=ms=>Math.floor(ms/60000)+" min";
+const pct=x=>Math.round(x*100)+" %";
+
+/* =====================================================================
+   FABRIQUE D’ÉCRANS
+   ===================================================================== */
+function typesFor(w){
+  if(w.letter)return["sound","letter"];
+  if(w.li===0)return["read","gr2fr"];
+  return elVoice?["gr2fr","fr2gr","listen"]:["gr2fr","fr2gr"];
+}
+function poolFor(w){return w.letter?ALL_LETTERS:levelWords(w.li)}
+function wq(w,type,step,extra={}){
+  const pool=poolFor(w);
+  const key=type==="read"?"tr":(type==="gr2fr"||type==="sound")?"fr":"gr";
+  const seen=new Set([w[key],w.fr]),others=[];
+  for(const x of shuffle(pool)){if(others.length===3)break;if(seen.has(x[key])||seen.has(x.fr))continue;seen.add(x[key]);seen.add(x.fr);others.push(x)}
+  let ask,prompt,opts,auto=null;const say=w.say||w.gr;
+  if(type==="gr2fr"){ask="Que signifie ce mot ?";prompt=`<div class="big gr" lang="el">${w.gr}</div>${sayBtn(say)}`;opts=choice(w.fr,others.map(o=>o.fr))}
+  else if(type==="fr2gr"){ask="Comment dit-on en grec ?";prompt=`<div class="fr-big">${w.fr}</div>`;opts=choice(G(w.gr),others.map(o=>G(o.gr)))}
+  else if(type==="listen"){ask="Écoutez et choisissez ce que vous entendez";prompt=playBtn(say);opts=choice(G(w.gr),others.map(o=>G(o.gr)));auto=say}
+  else if(type==="read"){ask="Comment se lit ce mot ?";prompt=`<div class="big gr" lang="el">${w.gr}</div>`;opts=choice(w.tr,others.map(o=>o.tr))}
+  else if(type==="sound"){ask="Quel son fait cette lettre ?";prompt=`<div class="big gr" lang="el">${w.gr}</div>${sayBtn(say)}`;opts=choice(w.fr,others.map(o=>o.fr))}
+  else{ask="Quelle lettre fait ce son ?";prompt=`<div class="fr-big">${w.fr}</div>`;opts=choice(G(w.gr),others.map(o=>G(o.gr)))}
+  const fb=w.letter?`${G(w.gr)} <span class="tr">${w.tr}</span> se prononce « ${w.fr} »`:`${G(w.gr)} <span class="tr">${w.tr}</span> : ${w.fr}`;
+  return mk({k:"mcq",step,ask,prompt,opts,answered:null,say,auto,item:w,unit:w.unit,fb,remake:()=>wq(w,type==="listen"?"gr2fr":type,step)},extra);
+}
+function gq(e,step,extra={}){
+  const[p,h,a,...x]=e;const fill=p.includes("___");
+  const prompt=fill?`<div class="gq gr" lang="el">${p.replace("___",'<span class="blank">___</span>')}</div>${h?`<p class="hint">${h}</p>`:""}`:`<div class="qtext">${p}</div>`;
+  const fb=fill?`${G(p.replace("___",`<b>${a}</b>`))}${h?` <span class="tr">${h}</span>`:""}`:`Réponse : ${fmt(a)}`;
+  const say=fill?p.replace("___",a):(GRK.test(a)?a:null);
+  return mk({k:"mcq",step,ask:fill?"Complétez la phrase":"Choisissez la bonne réponse",prompt,opts:choice(fmt(a),x.map(fmt)),answered:null,say,fb,remake:()=>gq(e,step,{unit:extra.unit})},extra);
+}
+function sq(s,pool,step,extra={}){
+  const others=shuffle(pool.filter(x=>x[0]!==s[0]&&x[1]!==s[1])).slice(0,3);
+  return mk({k:"mcq",step,ask:"Que veut dire cette phrase ?",prompt:`<div class="sent gr" lang="el">${s[0]}</div>${sayBtn(s[0])}`,opts:choice(s[1],others.map(o=>o[1])),answered:null,say:s[0],unit:s[2],fb:`${G(s[0])} <span class="tr">${s[1]}</span>`,remake:()=>sq(s,pool,step)},extra);
+}
+function oq(s,step){const words=s[0].split(" ");return{k:"order",step,s,words,tiles:shuffle(words.map((_,i)=>i)),picked:[],checked:null,remake:()=>oq(s,step)}}
+const sec=(step,title,text)=>({k:"sec",step,title,text});
+
+function warmupFor(uid){
+  const u=UBY[uid];const own=new Set(u?u.items.map(i=>i.id):[]);
+  let w=shuffle(dueItems().filter(i=>!own.has(i.id))).slice(0,12);
+  const weak=UNITS.filter(x=>S.units[x.id]?.weak&&x.id!==uid).flatMap(x=>x.items).filter(i=>!w.includes(i));
+  return w.concat(shuffle(weak).slice(0,Math.max(0,14-w.length)).slice(0,4));
+}
+
+function buildUnit(u){
+  const sc=[];const B={bilan:true,noRetry:true};
+  const warm=warmupFor(u.id);
+  if(warm.length){
+    sc.push(sec("Échauffement","Échauffement",`${warm.length} mot${warm.length>1?"s":""} déjà vu${warm.length>1?"s":""}, pour réveiller la mémoire.`));
+    warm.forEach(w=>sc.push(wq(w,pick(typesFor(w)),"Échauffement",{srs:true})));
+  }
+  if(u.alpha){
+    sc.push(sec("Lettres","Nouvelles lettres",`${u.letters.length} lettres à découvrir. Écoutez chacune et observez bien sa forme.`));
+    u.letters.forEach((w,i)=>sc.push({k:"teach",step:"Lettres",w,i,n:u.letters.length}));
+    const q=[];u.letters.forEach((l,i)=>{q.push(wq(l,"sound","Lettres"));if(i%2===0)q.push(wq(l,"letter","Lettres"))});
+    sc.push(...spread(q));
+    sc.push({k:"gram",step:"Règles",g:u.g});u.ex.forEach(e=>sc.push(gq(e,"Règles",{unit:u.id})));
+    sc.push(sec("Lecture","À vous de lire","Ces mots ressemblent beaucoup au français. Essayez de les lire avant d’écouter."));
+    u.words.forEach((w,i)=>sc.push({k:"teach",step:"Lecture",w,i,n:u.words.length}));
+    const r=[];u.words.forEach(w=>{r.push(wq(w,"read","Lecture"));r.push(wq(w,"gr2fr","Lecture"))});
+    sc.push(...spread(r));
+    sc.push(sec("Bilan","Bilan de l’unité","8 questions sans seconde chance. Votre score décide de la suite."));
+    sc.push(...shuffle([...shuffle(u.letters).slice(0,5).map(l=>wq(l,pick(["sound","letter"]),"Bilan",B)),...shuffle(u.words).slice(0,3).map(w=>wq(w,"read","Bilan",B))]));
+    return sc;
+  }
+  sc.push(sec("Vocabulaire","Nouveaux mots",`${u.words.length} mots à découvrir. Répétez chacun à voix haute après l’avoir écouté.`));
+  u.words.forEach((w,i)=>sc.push({k:"teach",step:"Vocabulaire",w,i,n:u.words.length}));
+  const q=[];u.words.forEach((w,i)=>{q.push(wq(w,"gr2fr","Vocabulaire"));q.push(wq(w,(elVoice&&i%2)?"listen":"fr2gr","Vocabulaire"))});
+  sc.push(...spread(q));
+  sc.push({k:"gram",step:"Grammaire",g:u.g});
+  shuffle(u.ex).forEach(e=>sc.push(gq(e,"Grammaire",{unit:u.id})));
+  sc.push(sec("Phrases","Construire des phrases","Remettez les mots dans l’ordre pour traduire chaque phrase."));
+  u.s.forEach(s=>sc.push(oq([s[0],s[1],u.id],"Phrases")));
+  sc.push({k:"dlg",step:"Dialogue",lines:u.d,show:false});
+  const dl=u.d.map(l=>[l[1],l[2],u.id]);
+  shuffle(dl).slice(0,3).forEach(l=>sc.push(sq(l,dl,"Dialogue")));
+  sc.push(sec("Bilan","Bilan de l’unité","8 questions sans seconde chance. Votre score décide de la suite."));
+  const ls=levelSentences(u.li);
+  sc.push(...shuffle([
+    ...shuffle(u.words).slice(0,4).map(w=>wq(w,pick(["gr2fr","fr2gr"]),"Bilan",B)),
+    ...shuffle(u.ex).slice(0,2).map(e=>gq(e,"Bilan",{...B,unit:u.id})),
+    ...shuffle(u.s).slice(0,2).map(s=>sq([s[0],s[1],u.id],ls,"Bilan",B))
+  ]));
+  return sc;
+}
+
+function buildExam(li){
+  const B={bilan:true,noRetry:true};let q;
+  if(li===0){
+    q=[...shuffle(ALL_LETTERS).slice(0,10).map(l=>wq(l,pick(["sound","letter"]),"Examen",B)),
+       ...shuffle(levelWords(0)).slice(0,6).map(w=>wq(w,"read","Examen",B)),
+       ...shuffle(levelExercises(0)).slice(0,4).map(x=>gq(x.e,"Examen",{...B,unit:x.uid}))];
+  }else{
+    const ls=levelSentences(li);
+    q=[...shuffle(levelWords(li)).slice(0,10).map(w=>wq(w,pick(["gr2fr","fr2gr"]),"Examen",B)),
+       ...shuffle(levelExercises(li)).slice(0,6).map(x=>gq(x.e,"Examen",{...B,unit:x.uid})),
+       ...shuffle(ls).slice(0,4).map(s=>sq(s,ls,"Examen",B))];
+  }
+  return[sec("Examen",`Examen : ${LEVELS[li].name}`,`20 questions sur tout le niveau, sans seconde chance. Il faut 75 % pour le valider.`),...shuffle(q)];
+}
+
+function placementStage(li){
+  const P={noRetry:true,idk:true,place:true};const st="Examen de niveau";
+  if(li===0)return shuffle(levelWords(0)).slice(0,5).map(w=>wq(w,"read",st,P));
+  const ls=levelSentences(li);
+  return shuffle([...shuffle(levelWords(li)).slice(0,4).map(w=>wq(w,"gr2fr",st,P)),
+    ...shuffle(levelExercises(li)).slice(0,3).map(x=>gq(x.e,st,P)),
+    sq(pick(ls),ls,st,P)]);
+}
+
+function buildReview(){
+  const items=shuffle(dueItems()).slice(0,20);
+  return[sec("Révision","Révision",`${items.length} mot${items.length>1?"s":""} à revoir aujourd’hui.`),...items.map(w=>wq(w,pick(typesFor(w)),"Révision",{srs:true}))];
+}
+
+/* =====================================================================
+   SÉANCES
+   ===================================================================== */
+let V="home",SES=null,RES=null;
+function newSession(mode,sc,extra={}){
+  SES=Object.assign({mode,sc,pos:0,start:Date.now(),stats:{c:0,t:0},bilan:{c:0,t:0},err:{}},extra);
+  SES.steps=[...new Set(sc.map(s=>s.step))];
+  go("session");
+}
+function startUnit(uid){newSession("unit",buildUnit(UBY[uid]),{unit:UBY[uid]})}
+function startExam(li){newSession("exam",buildExam(li),{li})}
+function startReview(){if(dueItems().length)newSession("review",buildReview())}
+function startPlacement(){
+  newSession("placement",[sec("Examen de niveau","Examen de niveau","Les questions deviennent de plus en plus difficiles et l’examen s’arrête dès qu’il a trouvé votre niveau. Choisissez « Je ne sais pas » plutôt que de deviner."),...placementStage(0)],{stageLi:0,stage:{c:0,t:0}});
+}
+const cur=()=>SES.sc[SES.pos];
+
+function insertRetry(r){
+  const c=cur();let k=SES.pos+1;while(k<SES.sc.length&&SES.sc[k].step===c.step)k++;
+  r.retry=true;SES.sc.splice(Math.min(SES.pos+4,k),0,r);
+}
+function record(s,ok){
+  if(s.retry)return;
+  SES.stats.t++;if(ok)SES.stats.c++;
+  if(s.bilan){SES.bilan.t++;if(ok)SES.bilan.c++}
+  if(s.place){SES.stage.t++;if(ok)SES.stage.c++}
+  if(!ok){const uid=s.unit||(s.item&&s.item.unit);if(uid)SES.err[uid]=(SES.err[uid]||0)+1}
+  if(s.srs&&s.item)grade(s.item,ok);
+}
+function answer(i){
+  const s=cur();if(s.k!=="mcq"||s.answered!=null||!s.opts[i])return;
+  s.answered=i;const ok=s.opts[i].ok;record(s,ok);
+  if(!ok&&!s.noRetry&&s.remake)insertRetry(s.remake());
+  if(s.say)speak(s.say);
+  render();
+}
+function checkOrder(){
+  const s=cur();if(s.checked!=null||s.picked.length!==s.words.length)return;
+  s.checked=s.picked.map(i=>s.words[i]).join(" ")===s.words.join(" ");
+  record(s,s.checked);
+  if(!s.checked)insertRetry(s.remake());
+  speak(s.s[0]);render();
+}
+function advance(){
+  if(canSpeak)speechSynthesis.cancel();
+  SES.pos++;
+  if(SES.pos>=SES.sc.length){SES.mode==="placement"?evalStage():finish();return}
+  render();window.scrollTo(0,0);
+}
+function closeSession(countsAsDay){
+  const m=Math.max(1,Math.round((Date.now()-SES.start)/60000));
+  S.minutes[today()]=(S.minutes[today()]||0)+m;S.total=(S.total||0)+m;
+  if(countsAsDay)S.dayDone=today();
+  markActive();save();return m;
+}
+function finish(){
+  const m=closeSession(SES.mode!=="review");
+  if(SES.mode==="unit"){
+    const u=SES.unit;const sc=SES.bilan.t?SES.bilan.c/SES.bilan.t:1;
+    S.units[u.id]={done:true,score:sc,weak:sc<.7,date:today()};
+    u.items.forEach(it=>{if(!S.cards[it.id])S.cards[it.id]={box:1,due:today(1)}});
+    save();
+    const msg=sc>=.85?"Excellent ! Vous êtes prêt pour la suite."
+      :sc>=.7?"Bien joué. Les mots ratés reviendront dans vos révisions."
+      :"Cette unité est marquée « à consolider ». Ses mots reviendront dans vos échauffements, et elle vous sera reproposée avant l’examen du niveau.";
+    const t=nextTask();
+    const after=t&&t.type==="exam"?`<p class="muted">Toutes les unités du niveau sont faites : l’examen « ${LEVELS[t.li].name} » vous attend demain.</p>`:"";
+    RES={title:"Μπράβο!",score:pct(sc),lines:[`Bilan de l’unité ${u.id}, en ${m} min.`,msg],extra:after};
+  }else if(SES.mode==="exam"){
+    const li=SES.li,sc=SES.bilan.c/SES.bilan.t,pass=sc>=.75,prev=S.exams[li]||{};
+    S.exams[li]={passed:pass||!!prev.passed,best:Math.max(sc,prev.best||0),date:today(),tries:(prev.tries||0)+1};
+    let extra="";
+    if(pass){
+      RES={title:"Μπράβο!",score:pct(sc),lines:[`Niveau « ${LEVELS[li].name} » validé.`,li<LEVELS.length-1?`Le niveau suivant, « ${LEVELS[li+1].name} », commence demain.`:"Vous avez terminé tout le parcours actuel. Continuez les révisions pour garder vos acquis."]};
+    }else{
+      const errs=Object.entries(SES.err).sort((a,b)=>b[1]-a[1]);
+      let weak=errs.filter(([,n])=>n>=2).map(([id])=>id);
+      if(!weak.length&&errs.length)weak=[errs[0][0]];
+      weak.forEach(id=>{if(S.units[id])S.units[id].weak=true});
+      extra=weak.length?`<p>À consolider : ${weak.map(id=>`unité ${id} (${UBY[id].t})`).join(", ")}. Ces unités vous seront reproposées, puis vous pourrez retenter l’examen.</p>`:"";
+      RES={title:"Presque",score:pct(sc),lines:["Il faut 75 % pour valider le niveau."]};
+    }
+    RES.extra=extra;save();
+  }else{
+    RES={title:"Μπράβο!",score:SES.stats.t?pct(SES.stats.c/SES.stats.t):"",lines:[`Révision terminée en ${m} min.`,"Les mots réussis reviendront plus tard, ceux ratés dès demain."]};
+  }
+  go("result");
+}
+function evalStage(){
+  const li=SES.stageLi,{c}=SES.stage,pass=c>=(li===0?4:6);
+  if(pass&&li<LEVELS.length-1){
+    SES.stageLi=li+1;SES.stage={c:0,t:0};SES.sc.push(...placementStage(li+1));render();window.scrollTo(0,0);return;
+  }
+  finishPlacement(pass?LEVELS.length-1:li,pass&&li===LEVELS.length-1);
+}
+function placeAt(start){
+  for(let li=0;li<start;li++){
+    levelUnits(li).forEach(u=>{
+      if(!S.units[u.id]?.done)S.units[u.id]={done:true,score:null,weak:false,viaTest:true,date:today()};
+      u.items.forEach(it=>{if(!S.cards[it.id])S.cards[it.id]={box:3,due:today(2+Math.floor(Math.random()*8))}});
+    });
+    if(!S.exams[li]?.passed)S.exams[li]={passed:true,viaTest:true,date:today()};
+  }
+  S.placed=true;
+}
+function finishPlacement(start,all){
+  placeAt(start);closeSession(false);
+  const L=LEVELS[start];
+  RES={title:"Votre niveau",score:start===0?"Débutant complet":`${L.name} (${L.tag})`,lines:[
+    start===0?"Vous commencez par l’alphabet : c’est la base de tout le reste."
+      :all?"Vous maîtrisez déjà l’essentiel du parcours. Vous commencez au dernier niveau pour consolider."
+      :`Vous commencez au niveau « ${L.name} ». Les mots des niveaux précédents reviendront de temps en temps en révision.`]};
+  go("result");
+}
+
+/* =====================================================================
+   RENDU
+   ===================================================================== */
+const app=document.getElementById("app");
+function go(v){V=v;render();window.scrollTo(0,0)}
+function render(){({home:renderHome,session:renderSession,result:renderResult,notes:renderNotes})[V]()}
+
+function streakText(){
+  const s=currentStreak();
+  if(!s)return"Faites votre première séance pour lancer votre série.";
+  const d=`<b>${s} jour${s>1?"s":""}</b> d’affilée`;
+  return S.last===today()?d+". À demain.":d+". Faites votre séance aujourd’hui pour la garder.";
+}
+function nextReviewText(){
+  const ds=Object.values(S.cards).map(c=>c.due).sort();if(!ds.length)return"";
+  if(ds[0]===today(1))return"demain";
+  return"le "+parseDay(ds[0]).toLocaleDateString("fr-FR",{day:"numeric",month:"long"});
+}
+function taskLabel(t){return t.type==="unit"?`Unité ${t.uid} : ${UBY[t.uid].t}`:`Examen : ${LEVELS[t.li].name}`}
+
+function renderWelcome(){
+  app.innerHTML=`
+  <header class="hello"><h1 class="word gr" lang="el">Γεια σας!</h1><p class="sub">ya sas, bonjour</p></header>
+  <p class="lead">Une séance de 15 minutes par jour pour apprendre le grec moderne, de l’alphabet jusqu’au niveau A2.</p>
+  <section class="today">
+    <h2>Par où commencer ?</h2>
+    <p>Un court examen mesure votre niveau et vous place au bon endroit du parcours. Il dure 5 minutes au plus.</p>
+    <div class="actions"><button class="btn" data-a="placement">Passer l’examen de niveau</button><button class="link" data-a="beginner">Je débute complètement</button></div>
+  </section>
+  <p class="muted">Chaque séance suit le même fil : échauffement, nouveaux mots, grammaire, phrases, dialogue, puis un bilan qui adapte la suite. Un examen valide chaque niveau.</p>`;
+}
+
+function renderHome(){
+  if(!S.placed)return renderWelcome();
+  const h=new Date().getHours();
+  const g=h<13?["Καλημέρα","kaliméra, bonjour"]:h<21?["Καλησπέρα","kalispéra, bonsoir"]:["Καληνύχτα","kaliníkhta, bonne nuit"];
+  const t=nextTask(),due=dueItems(),learned=Object.keys(S.cards).length,mins=S.minutes[today()]||0;
+  let block;
+  if(!t)block=`<h2>Parcours terminé</h2><p>Vous avez validé tous les niveaux disponibles. Révisez chaque jour pour garder vos acquis.</p>`;
+  else{
+    const sub=t.type==="exam"?"20 questions sur tout le niveau. Il faut 75 % pour passer au suivant."
+      :t.redo?"Cette unité est à consolider avant l’examen du niveau."
+      :UBY[t.uid].alpha?"Lettres, règles de lecture et premiers mots.":"Vocabulaire, grammaire, phrases, dialogue et bilan.";
+    const skip=t.redo?`<button class="link" data-a="exam" data-v="${t.li}">Passer directement à l’examen</button>`:"";
+    block=S.dayDone===today()
+      ?`<h2>Séance du jour terminée</h2><p>${mins} min aujourd’hui. Prochaine étape : ${taskLabel(t)}.</p><div class="actions"><button class="btn ghost" data-a="today">Continuer quand même</button></div>`
+      :`<p class="kicker">Séance du jour, environ 15 min</p><h2>${taskLabel(t)}</h2><p>${sub}</p><div class="actions"><button class="btn" data-a="today">Commencer la séance</button>${skip}</div>`;
+  }
+  const rev=learned?(due.length
+    ?`<section class="row"><div><h3>Révision</h3><p>${due.length} mot${due.length>1?"s":""} à revoir aujourd’hui</p></div><button class="btn ghost" data-a="review">Réviser</button></section>`
+    :`<section class="row"><div><h3>Révision</h3><p>Rien à revoir aujourd’hui. Prochaine révision ${nextReviewText()}.</p></div></section>`):"";
+  const path=LEVELS.map((L,li)=>{
+    const ex=S.exams[li],us=levelUnits(li),allDone=us.every(u=>S.units[u.id]?.done);
+    const rows=us.map(u=>{
+      const st=S.units[u.id],isCur=t&&t.type==="unit"&&t.uid===u.id&&!t.redo;
+      let right="";
+      if(st?.done){
+        right=st.weak?`<span class="tag weak">À consolider</span> <button class="link" data-a="unit" data-v="${u.id}">Refaire</button>`
+          :`<span class="st">${st.viaTest?"Acquis":pct(st.score)}</span> <button class="link" data-a="unit" data-v="${u.id}">Refaire</button>`;
+      }else if(isCur)right=`<span class="tag">À suivre</span>`;
+      return`<li class="${st?.done?"is-done":""} ${isCur?"is-cur":""}"><span class="num gr">${u.id}</span><span class="pt">${u.t}</span>${right}</li>`;
+    }).join("");
+    const exRight=ex?.passed?`<span class="tag ok">Validé${ex.best?` (${pct(ex.best)})`:""}</span>`
+      :allDone?`<button class="link" data-a="exam" data-v="${li}">Passer l’examen</button>`:`<span class="st">Après les unités</span>`;
+    return`<section class="lvl"><h3>Niveau ${li} : ${L.name} <span>${L.tag}</span></h3><ol class="path">${rows}<li class="${ex?.passed?"is-done":""}"><span class="num gr">✦</span><span class="pt">Examen du niveau</span>${exRight}</li></ol></section>`;
+  }).join("");
+  app.innerHTML=`
+  <header class="hello"><h1 class="word gr" lang="el">${g[0]}</h1><p class="sub">${g[1]}</p><p class="streak">${streakText()}</p></header>
+  <section class="today">${block}</section>
+  ${rev}
+  <section class="row"><div><h3>Fiches</h3><p>L’alphabet et toutes les règles de grammaire vues</p></div><button class="btn ghost" data-a="notes">Ouvrir</button></section>
+  ${path}
+  <footer>
+    <span>${learned} mots et lettres appris, ${S.total||0} min d’étude au total.</span>
+    <button class="link" data-a="replace">Refaire l’examen de niveau</button>
+    <button class="link" data-a="reset">Effacer ma progression</button>
+  </footer>`;
+}
+
+function renderSession(){
+  const s=cur();
+  const p=Math.round(SES.pos/SES.sc.length*100);
+  const stepN=SES.steps.indexOf(s.step)+1;
+  const stepLabel=SES.steps.length>1?`${s.step}, étape ${stepN} sur ${SES.steps.length}`:s.step;
+  const head=`<div class="bar"><button class="x" data-a="quit" aria-label="Quitter la séance">✕</button><div class="track" role="progressbar" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100"><span style="width:${p}%"></span></div><span class="clock" id="clock">${fmtMin(Date.now()-SES.start)}</span></div><p class="step">${stepLabel}</p>`;
+  let body="";
+  if(s.k==="sec"){
+    body=`<section class="sec"><h2>${s.title}</h2><p>${s.text}</p><button class="btn" data-a="cont">C’est parti</button></section>`;
+  }else if(s.k==="teach"){
+    const w=s.w;
+    body=`<p class="ask">${w.letter?"Nouvelle lettre":"Nouveau mot"}, ${s.i+1} sur ${s.n}</p>
+      <div class="big gr" lang="el">${w.gr}</div><p class="tr-big">${w.tr}</p>
+      <p class="fr-big">${w.letter?"se prononce « "+w.fr+" »":w.fr}</p>${sayBtn(w.say||w.gr)}
+      <div class="foot"><button class="btn wide" data-a="cont">Suivant</button></div>`;
+    if(!s.spoken){s.spoken=true;setTimeout(()=>speak(w.say||w.gr),250)}
+  }else if(s.k==="gram"){
+    const rows=s.g.tb.map(r=>`<tr data-a="say" data-v="${r[0]}"><td class="gr" lang="el">${r[0]}</td><td class="fr">${r[1]}</td></tr>`).join("");
+    body=`<article class="gram"><h2>${s.g.t}</h2><p>${s.g.p}</p><table class="conj">${rows}</table>${s.g.n?`<p class="note">${s.g.n}</p>`:`<p class="muted">Touchez une ligne pour l’écouter.</p>`}</article>
+      <div class="foot"><button class="btn wide" data-a="cont">J’ai compris, je m’entraîne</button></div>`;
+  }else if(s.k==="mcq"){
+    const done=s.answered!=null;
+    const opts=s.opts.map((o,i)=>{let c="opt";if(done){if(o.ok)c+=" right";else if(i===s.answered)c+=" wrong"}
+      return`<button class="${c}" data-a="ans" data-v="${i}" ${done?"disabled":""}><span class="k">${i+1}</span><span>${o.h}</span></button>`}).join("");
+    let fb="";
+    if(done){const ok=s.opts[s.answered].ok;
+      fb=`<div class="fb ${ok?"ok":"ko"}" role="status"><div><strong>${ok?"Exact":"Pas tout à fait"}</strong><div class="fb-word">${s.fb}</div></div><button class="btn wide" data-a="cont">Continuer</button></div>`}
+    body=`<p class="ask">${s.ask}</p>${s.prompt}<div class="opts">${opts}</div>${fb}`;
+    if(s.auto&&!done&&!s.spoken){s.spoken=true;setTimeout(()=>speak(s.auto),300)}
+  }else if(s.k==="order"){
+    const built=s.picked.map((wi,pi)=>s.checked==null?`<button class="wt" data-a="unpick" data-v="${pi}">${s.words[wi]}</button>`:`<span class="wt">${s.words[wi]}</span>`).join("");
+    const bank=s.tiles.map(wi=>s.picked.includes(wi)?`<span class="wt ghost" aria-hidden="true">${s.words[wi]}</span>`:`<button class="wt" data-a="pick" data-v="${wi}" ${s.checked!=null?"disabled":""}>${s.words[wi]}</button>`).join("");
+    let fb="";
+    if(s.checked!=null)fb=`<div class="fb ${s.checked?"ok":"ko"}" role="status"><div><strong>${s.checked?"Exact":"Pas tout à fait"}</strong><div class="fb-word">${G(s.s[0])}</div></div>${sayBtn(s.s[0])}<button class="btn wide" data-a="cont">Continuer</button></div>`;
+    body=`<p class="ask">Traduisez en remettant les mots dans l’ordre</p><div class="fr-big">${s.s[1]}</div>
+      <div class="built ${s.checked==null?"":s.checked?"ok":"ko"}" aria-label="Votre phrase">${built}</div>
+      <div class="bank">${bank}</div>
+      ${s.checked==null?`<div class="foot"><button class="btn wide" data-a="check" ${s.picked.length===s.words.length?"":"disabled"}>Vérifier</button></div>`:fb}`;
+  }else if(s.k==="dlg"){
+    const lines=s.lines.map(l=>`<div class="ln"><p class="sp">${l[0]}</p><button class="lg gr" lang="el" data-a="say" data-v="${l[1]}">${l[1]}</button>${s.show?`<p class="lf">${l[2]}</p>`:""}</div>`).join("");
+    body=`<p class="ask">Lisez le dialogue. Touchez une réplique pour l’écouter, puis essayez de comprendre sans la traduction.</p>
+      <div class="dlg">${lines}</div>
+      <div class="actions">${canSpeak?`<button class="btn ghost" data-a="sayall">${ICON} Tout écouter</button>`:""}<button class="link" data-a="toggle">${s.show?"Masquer":"Afficher"} la traduction</button></div>
+      <div class="foot"><button class="btn wide" data-a="cont">J’ai compris</button></div>`;
+  }
+  app.innerHTML=head+body;
+  const c=app.querySelector('[data-a="cont"]');
+  if(c&&(s.k==="mcq"||s.k==="order")){c.focus({preventScroll:true});c.scrollIntoView({block:"nearest",behavior:"smooth"})}
+}
+
+function renderResult(){
+  app.innerHTML=`<section class="res">
+    <div class="big gr" lang="el">${RES.title}</div>
+    ${RES.score?`<p class="score">${RES.score}</p>`:""}
+    ${RES.lines.map(l=>`<p>${l}</p>`).join("")}
+    ${RES.extra||""}
+    <p class="streak">${streakText()}</p>
+    <div class="actions"><button class="btn" data-a="home">Retour à l’accueil</button></div></section>`;
+}
+
+function renderNotes(){
+  const tiles=ALPHA.map(a=>`<button class="tile" data-a="say" data-v="${a[3]}" aria-label="${a[1]}, ${a[2]}"><span class="gr L" lang="el">${a[0]}</span><span class="nm">${a[1]}</span><span class="snd">${a[2]}</span></button>`).join("");
+  const combos=COMBOS.map(c=>`<tr data-a="say" data-v="${c[2]}"><td class="gr" lang="el">${c[0]}</td><td class="fr">${c[1]}</td><td class="gr fr" lang="el">${c[2]}</td></tr>`).join("");
+  const t=nextTask();
+  const open=UNITS.filter(u=>S.units[u.id]?.done||(t&&t.uid===u.id));
+  const cards=open.map(u=>`<details><summary>${u.id} : ${u.g.t}</summary><p>${u.g.p}</p><table class="conj">${u.g.tb.map(r=>`<tr data-a="say" data-v="${r[0]}"><td class="gr" lang="el">${r[0]}</td><td class="fr">${r[1]}</td></tr>`).join("")}</table></details>`).join("");
+  app.innerHTML=`
+    <div class="bar"><button class="x" data-a="home" aria-label="Retour à l’accueil">✕</button></div>
+    <h1 class="page-title">Fiches</h1>
+    <h2>L’alphabet</h2><p class="muted">${canSpeak?"Touchez une lettre pour entendre son nom.":"La lecture audio n’est pas disponible sur ce navigateur."}</p>
+    <div class="grid">${tiles}</div>
+    <h2>Les lettres qui vont par deux</h2>
+    <table class="conj">${combos}</table>
+    <h2 style="margin-top:28px">Grammaire</h2>
+    ${cards||`<p class="muted">Les fiches de grammaire apparaîtront ici au fil des unités.</p>`}`;
+}
+
+/* =====================================================================
+   INTERACTIONS
+   ===================================================================== */
+const ACTIONS={
+  placement:startPlacement,
+  replace:()=>{if(confirm("Refaire l’examen de niveau ? Votre progression actuelle est conservée."))startPlacement()},
+  beginner:()=>{S.placed=true;save();go("home")},
+  today:()=>{const t=nextTask();if(!t)return;t.type==="unit"?startUnit(t.uid):startExam(t.li)},
+  unit:v=>startUnit(v),
+  exam:v=>startExam(+v),
+  review:startReview,
+  notes:()=>go("notes"),
+  home:()=>{if(canSpeak)speechSynthesis.cancel();go("home")},
+  quit:()=>{if(confirm("Quitter la séance ? Ce que vous avez fait dans cette séance ne sera pas compté.")){if(canSpeak)speechSynthesis.cancel();SES=null;go("home")}},
+  cont:advance,
+  ans:v=>answer(+v),
+  pick:v=>{const s=cur();if(s.checked==null&&!s.picked.includes(+v)){s.picked.push(+v);render()}},
+  unpick:v=>{const s=cur();if(s.checked==null){s.picked.splice(+v,1);render()}},
+  check:checkOrder,
+  say:v=>speak(v),
+  sayall:()=>speakAll(cur().lines.map(l=>l[1])),
+  toggle:()=>{const s=cur();s.show=!s.show;render()},
+  reset:()=>{if(confirm("Effacer toute votre progression ? Cette action est définitive.")){S=fresh();save();go("home")}}
+};
+app.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b||b.disabled)return;const f=ACTIONS[b.dataset.a];if(f)f(b.dataset.v)});
+document.addEventListener("keydown",e=>{
+  if(V!=="session"||e.metaKey||e.ctrlKey||e.altKey)return;
+  const s=cur(),onBtn=e.target.tagName==="BUTTON";
+  if(s.k==="mcq"&&s.answered==null&&/^[1-5]$/.test(e.key)){answer(+e.key-1);e.preventDefault();return}
+  if(e.key==="Enter"&&!onBtn){
+    if(s.k==="order"&&s.checked==null)checkOrder();
+    else if(s.k!=="mcq"||s.answered!=null)advance();
+    e.preventDefault();
+  }
+});
+setInterval(()=>{const el=document.getElementById("clock");if(el&&SES)el.textContent=fmtMin(Date.now()-SES.start)},15000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&V==="home")render()});
+render();
+</script>
+</body>
+</html>
