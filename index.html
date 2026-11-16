@@ -15,6 +15,7 @@
   --bg:#F7F9FB;--surface:#FFFFFF;--ink:#14213D;--muted:#5B6779;--line:#D9E1EA;
   --blue:#1D4E89;--on-blue:#FFFFFF;--blue-soft:#E4EDF7;--olive:#5E6E33;
   --right:#3E7C4F;--right-soft:#E6F1E8;--wrong:#B23A48;--wrong-soft:#F8E6E8;
+  --s1:#6da7ec;--s2:#2a78d6;--s3:#1c5cab;--s4:#0d366b; /* dégradé validé : plus = plus foncé */
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
@@ -22,6 +23,7 @@
     --bg:#0F1B2D;--surface:#16263D;--ink:#E8EEF5;--muted:#9AA9BD;--line:#253650;
     --blue:#8DB3E2;--on-blue:#0F1B2D;--blue-soft:#1C3352;--olive:#B3C27F;
     --right:#7FC08F;--right-soft:#173826;--wrong:#E58A95;--wrong-soft:#3A1C24;
+    --s1:#1c5cab;--s2:#2a78d6;--s3:#5598e7;--s4:#9ec5f4; /* en sombre : plus = plus clair */
     color-scheme:dark;
   }
 }
@@ -109,6 +111,84 @@ footer .link{color:var(--muted);font-size:15px;justify-self:start}
 .opt:disabled{opacity:1}
 .opt.right{border-color:var(--right);background:var(--right-soft)}
 .opt.wrong{border-color:var(--wrong);background:var(--wrong-soft)}
+
+/* Images */
+.pic,.po,.fbp{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-weight:400}
+.pic{font-size:104px;line-height:1.15;margin:4px 0 8px}
+.pic.sm{font-size:64px;margin:0 0 4px}
+.pic.n,.pic.sm.n{font-size:40px;line-height:1.3;letter-spacing:4px;white-space:nowrap}
+.po{font-size:56px;line-height:1.1}
+.po .cnt{display:block;font-size:22px;line-height:1.4;letter-spacing:1px;white-space:nowrap}
+.fbp{font-size:24px;vertical-align:-3px}
+.opts.grid4{grid-template-columns:1fr 1fr}
+.opts.grid4 .opt{position:relative;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:124px;padding:38px 10px 16px}
+.opts.grid4 .opt .k{position:absolute;top:8px;left:8px}
+
+/* Écrire en grec */
+.wr{display:block;width:100%;margin-top:12px;padding:10px 14px;font-size:32px;line-height:1.2;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:14px;caret-color:var(--blue)}
+.wr:focus{outline:none;border-color:var(--blue)}
+.wr.ok{border-color:var(--right)}
+.wr.ko{border-color:var(--wrong)}
+.wtools{display:flex;flex-wrap:wrap;align-items:center;gap:4px 20px;margin-top:6px;min-height:40px}
+.wtools .hint i{color:var(--ink)}
+.kb{display:grid;gap:7px;margin-top:12px;-webkit-user-select:none;user-select:none}
+.kr{display:flex;gap:5px;justify-content:center}
+.kk{flex:1 1 0;max-width:44px;min-height:48px;padding:0;font-size:23px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:9px;box-shadow:0 1px 0 var(--line);touch-action:manipulation}
+.kk:active{background:var(--blue-soft)}
+.kk.back{flex:1.6 1 0;max-width:70px;font-size:20px}
+.kk.acc,.kk.space{max-width:none;font-family:inherit;font-size:16px;color:var(--muted)}
+.kk.acc{flex:1.3 1 0}
+.kk.space{flex:3 1 0}
+.kk.on{color:var(--blue);background:var(--blue-soft);border-color:var(--blue)}
+.yours{margin:8px 0 0;color:var(--muted)}
+
+/* Statistiques */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 8px}
+.tile-s{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px}
+.tile-s p{margin:0}
+.tl{font-size:14px;color:var(--muted)}
+.tv{font-size:28px;font-weight:600;line-height:1.2;margin:4px 0 2px!important}
+.ts{font-size:13px;color:var(--muted);line-height:1.35}
+.st{padding:24px 0 6px;border-top:1px solid var(--line);margin-top:22px}
+.st h2{font-size:20px}
+.st>.muted{margin:2px 0 14px;font-size:15px}
+.cal{overflow-x:auto}
+.cm,.cg{display:grid;grid-template-columns:18px repeat(12,1fr);gap:3px}
+.cm span{font-size:12px;color:var(--muted);white-space:nowrap;overflow:visible;height:16px}
+.cw{display:grid;grid-template-rows:repeat(7,1fr);gap:3px}
+.cw.lab span{font-size:11px;color:var(--muted);display:flex;align-items:center}
+.cd{display:block;width:100%;aspect-ratio:1;min-width:12px;border:0;padding:0;border-radius:4px;background:var(--line)}
+.cd.fut{background:transparent}
+.cd.b1{background:var(--s1)}.cd.b2{background:var(--s2)}.cd.b3{background:var(--s3)}.cd.b4{background:var(--s4)}
+.cd.now{box-shadow:0 0 0 2px var(--bg),0 0 0 3.5px var(--ink)}
+.cleg{display:flex;align-items:center;gap:4px;justify-content:flex-end;margin-top:10px;font-size:12px;color:var(--muted)}
+.cleg .cd{width:14px;min-width:14px}
+.cleg span:first-child{margin-right:4px}.cleg span:last-child{margin-left:4px}
+.readout{font-size:15px;color:var(--muted);margin:10px 0 0;min-height:1.5em}
+.readout b{color:var(--ink)}
+.lc{display:block;width:100%;height:auto;touch-action:pan-y}
+.lc .gl{stroke:var(--line);stroke-width:1}
+.lc .ax{font-size:11px;fill:var(--muted);font-family:inherit}
+.lc .ll{fill:none;stroke:var(--blue);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.lc .la{fill:var(--blue);opacity:.1}
+.lc .ld{fill:var(--blue);stroke:var(--bg);stroke-width:2}
+.lc .lv{font-size:13px;font-weight:600;fill:var(--ink);font-family:inherit}
+.lc .xh{stroke:var(--muted);stroke-width:1}
+.seg{display:flex;gap:2px;height:8px;margin:4px 0 6px}
+.seg span{border-radius:999px;min-width:4px}
+.m0{background:var(--s1)}.m1{background:var(--s2)}.m2{background:var(--s3)}.m3{background:var(--s4)}
+.mlist,.wlist{list-style:none;margin:0;padding:0}
+.mlist li{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.mlist .sw{flex:none;width:12px;height:12px;border-radius:4px}
+.mlist .mn{flex:1;display:flex;flex-direction:column;line-height:1.3}
+.mlist .mn span{font-size:14px;color:var(--muted)}
+.mlist .mc{font-weight:600;font-size:18px}
+.wlist li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.wbtn{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:4px 0;font-size:22px;color:var(--blue)}
+.wfr{flex:1;min-width:120px;color:var(--muted)}
+.wfr b{color:var(--ink)}
+.wn{font-size:14px;color:var(--muted);white-space:nowrap}
+.sub{margin:22px 0 4px;font-size:17px}
 
 /* Entraînement libre */
 .ph{font-size:18px;margin:26px 0 10px}
@@ -388,7 +468,7 @@ let S=load();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function today(o=0){const d=new Date();d.setDate(d.getDate()+o);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function parseDay(s){const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)}
-function markActive(){const t=today();if(S.last===t)return;S.streak=(S.last===today(-1))?S.streak+1:1;S.last=t}
+function markActive(){const t=today();if(S.last===t)return;S.streak=(S.last===today(-1))?S.streak+1:1;S.last=t;S.best=Math.max(S.best||0,S.streak)}
 function currentStreak(){return(S.last===today()||S.last===today(-1))?S.streak:0}
 function dueItems(){const t=today();return Object.entries(S.cards).filter(([,c])=>c.due<=t).map(([id])=>ITEMS[id]).filter(Boolean)}
 function grade(it,ok){const c=S.cards[it.id]||{box:1};c.box=ok?Math.min(c.box+1,INTERVALS.length-1):1;if(!ok)c.miss=(c.miss||0)+1;c.due=today(INTERVALS[c.box]);S.cards[it.id]=c}
@@ -464,26 +544,61 @@ const pct=x=>Math.round(x*100)+" %";
 /* =====================================================================
    FABRIQUE D’ÉCRANS
    ===================================================================== */
+/* ---------- Images : un emoji par mot concret, sans ambiguïté dans un même niveau ---------- */
+const PIC={
+  "ταξί":"🚕","καφές":"☕","μετρό":"🚇","κιθάρα":"🎸","θέατρο":"🎭","δελφίνι":"🐬","ζέβρα":"🦓","γάλα":"🥛",
+  "μουσική":"🎵","σοκολάτα":"🍫","πίτσα":"🍕","τηλέφωνο":"📞","φωτογραφία":"📷","μπανάνα":"🍌","ντομάτα":"🍅",
+  "καλημέρα":"🌅","καληνύχτα":"🌙","ευχαριστώ":"🙏","ναι":"👍","όχι":"👎",
+  "η Γαλλία":"🇫🇷","η Ελλάδα":"🇬🇷",
+  "η μητέρα":"👩‍🍼","ο πατέρας":"👨‍🍼","το παιδί":"🧒","η οικογένεια":"👨‍👩‍👧‍👦","ο άντρας":"👨","η γυναίκα":"👩",
+  "ο καφές":"☕","το νερό":"💧","το τσάι":"🍵","η μπίρα":"🍺","το κρασί":"🍷","το ψωμί":"🍞","το γλυκό":"🍰","ο λογαριασμός":"🧾",
+  "η πόλη":"🏙️","ο δρόμος":"🛣️","το σπίτι":"🏠","η θάλασσα":"🌊","η παραλία":"🏖️","το ξενοδοχείο":"🏨","το μουσείο":"🏛️","το εστιατόριο":"🍽️",
+  "μιλάω":"🗣️","ξυπνάω":"⏰","δουλεύω":"💼","διαβάζω":"📖","τρώω":"😋","το βράδυ":"🌃","η ώρα":"🕒",
+  "το ψάρι":"🐟","το κρέας":"🥩","το τυρί":"🧀","τα φρούτα":"🍇","το μήλο":"🍎","η ντομάτα":"🍅","το αυγό":"🥚","το λάδι":"🫒","το κιλό":"⚖️","αγοράζω":"🛒",
+  "ζεστός":"🔥","κρύος":"🥶","ακριβός":"💰","καινούργιος":"🆕",
+  "το αεροπλάνο":"✈️","το πλοίο":"🚢","το λεωφορείο":"🚌","το αυτοκίνητο":"🚗","το εισιτήριο":"🎫","το λιμάνι":"⚓","το νησί":"🏝️","το αεροδρόμιο":"🛫",
+  "η κάρτα":"💳","το δωμάτιο":"🛏️","το κλειδί":"🔑","ο γιατρός":"🧑‍⚕️","ανοιχτός":"🔓","κλειστός":"🔒","η βοήθεια":"🆘",
+  "οι διακοπές":"🧳",
+  "η μουσική":"🎶","το βιβλίο":"📚","η ταινία":"🎬","ο χορός":"💃","το φαγητό":"🍲",
+  "το πόδι":"🦵","το χέρι":"✋","πονάει":"🤕","ο πυρετός":"🌡️","το φάρμακο":"💊","κουρασμένος":"😴","άρρωστος":"🤒",
+  "ο ήλιος":"☀️","η βροχή":"🌧️","ο αέρας":"💨","το χιόνι":"❄️","ο χειμώνας":"⛄","η άνοιξη":"🌷","το φθινόπωρο":"🍂","κάνει ζέστη":"🥵"
+};
+const NUM={"ένα":1,"δύο":2,"τρία":3,"τέσσερα":4,"πέντε":5,"έξι":6,"επτά":7,"οχτώ":8,"εννιά":9,"δέκα":10};
+const COUNTERS=["🍎","⭐","🐟","🌸","🫒","🎈"];
+Object.values(ITEMS).forEach(w=>{if(w.letter)return;w.num=NUM[w.gr]||0;w.pk=PIC[w.gr]||(w.num?"n"+w.num:null)});
+// les nombres s’affichent en rangées de 5, comme sur un dé, pour compter d’un coup d’œil
+const picHTML=(w,c)=>w.num?`<span class="cnt">${Array(w.num).fill(c||"🍎").join("").replace(/((?:\p{Extended_Pictographic}️?){5})(?=.)/gu,"$1<br>")}</span>`:(PIC[w.gr]||"");
+const picPool=li=>levelWords(li).filter(x=>x.pk);
+function canPic(w){return !!w.pk&&(w.num?levelWords(w.li).filter(x=>x.num).length>=4:picPool(w.li).filter(x=>!x.num).length>=4)}
+
 function typesFor(w){
   if(w.letter)return["sound","letter"];
-  if(w.li===0)return["read","gr2fr"];
-  return elVoice?["gr2fr","fr2gr","listen"]:["gr2fr","fr2gr"];
+  const t=w.li===0?["read","gr2fr"]:(elVoice?["gr2fr","fr2gr","listen"]:["gr2fr","fr2gr"]);
+  if(canPic(w))t.push("img2gr","gr2img");
+  if((S.cards[w.id]?.box||1)>=2)t.push("write","write"); // on écrit les mots déjà un peu connus
+  return t;
 }
 function poolFor(w){return w.letter?ALL_LETTERS:levelWords(w.li)}
 function wq(w,type,step,extra={}){
-  const pool=poolFor(w);
-  const key=type==="read"?"tr":(type==="gr2fr"||type==="sound")?"fr":"gr";
+  if(type==="write")return writeQ(w,step,extra);
+  if((type==="img2gr"||type==="gr2img")&&!canPic(w))type=w.li===0?"gr2fr":"fr2gr";
+  const img=type==="img2gr"||type==="gr2img";
+  let pool=poolFor(w);
+  if(img)pool=w.num?pool.filter(x=>x.num):pool.filter(x=>x.pk&&!x.num);
+  const key=type==="read"?"tr":(type==="gr2fr"||type==="sound")?"fr":type==="gr2img"?"pk":"gr";
   const seen=new Set([w[key],w.fr]),others=[];
-  for(const x of shuffle(pool)){if(others.length===3)break;if(seen.has(x[key])||seen.has(x.fr))continue;seen.add(x[key]);seen.add(x.fr);others.push(x)}
-  let ask,prompt,opts,auto=null;const say=w.say||w.gr;
-  if(type==="gr2fr"){ask="Que signifie ce mot ?";prompt=`<div class="big gr" lang="el">${w.gr}</div>${sayBtn(say)}`;opts=choice(w.fr,others.map(o=>o.fr))}
+  for(const x of shuffle(pool)){if(others.length===3)break;if(seen.has(x[key])||seen.has(x.fr)||(img&&seen.has(x.pk)))continue;seen.add(x[key]);seen.add(x.fr);if(x.pk)seen.add(x.pk);others.push(x)}
+  let ask,prompt,opts,auto=null,grid=false;const say=w.say||w.gr,ctr=pick(COUNTERS);
+  if(type==="img2gr"){ask=w.num?"Combien y en a-t-il ?":"Qu’est-ce que c’est ?";prompt=`<div class="pic${w.num?" n":""}" role="img" aria-label="Image à reconnaître">${picHTML(w,ctr)}</div>`;opts=choice(G(w.gr),others.map(o=>G(o.gr)))}
+  else if(type==="gr2img"){ask="Quelle image correspond à ce mot ?";prompt=`<div class="big gr" lang="el">${w.gr}</div>${sayBtn(say)}`;opts=choice(`<span class="po">${picHTML(w,ctr)}</span>`,others.map(o=>`<span class="po">${picHTML(o,ctr)}</span>`));grid=true;auto=say}
+  else if(type==="gr2fr"){ask="Que signifie ce mot ?";prompt=`<div class="big gr" lang="el">${w.gr}</div>${sayBtn(say)}`;opts=choice(w.fr,others.map(o=>o.fr))}
   else if(type==="fr2gr"){ask="Comment dit-on en grec ?";prompt=`<div class="fr-big">${w.fr}</div>`;opts=choice(G(w.gr),others.map(o=>G(o.gr)))}
   else if(type==="listen"){ask="Écoutez et choisissez ce que vous entendez";prompt=playBtn(say);opts=choice(G(w.gr),others.map(o=>G(o.gr)));auto=say}
   else if(type==="read"){ask="Comment se lit ce mot ?";prompt=`<div class="big gr" lang="el">${w.gr}</div>`;opts=choice(w.tr,others.map(o=>o.tr))}
   else if(type==="sound"){ask="Quel son fait cette lettre ?";prompt=`<div class="big gr" lang="el">${w.gr}</div>${sayBtn(say)}`;opts=choice(w.fr,others.map(o=>o.fr))}
   else{ask="Quelle lettre fait ce son ?";prompt=`<div class="fr-big">${w.fr}</div>`;opts=choice(G(w.gr),others.map(o=>G(o.gr)))}
-  const fb=w.letter?`${G(w.gr)} <span class="tr">${w.tr}</span> se prononce « ${w.fr} »`:`${G(w.gr)} <span class="tr">${w.tr}</span> : ${w.fr}`;
-  return mk({k:"mcq",step,ask,prompt,opts,answered:null,say,auto,item:w,unit:w.unit,fb,remake:()=>wq(w,type==="listen"?"gr2fr":type,step)},extra);
+  const fb=w.letter?`${G(w.gr)} <span class="tr">${w.tr}</span> se prononce « ${w.fr} »`:`${PIC[w.gr]?`<span class="fbp" aria-hidden="true">${PIC[w.gr]}</span> `:""}${G(w.gr)} <span class="tr">${w.tr}</span> : ${w.fr}`;
+  return mk({k:"mcq",step,ask,prompt,opts,grid,answered:null,say,auto,item:w,unit:w.unit,fb,remake:()=>wq(w,type==="listen"?"gr2fr":type,step)},extra);
 }
 function gq(e,step,extra={}){
   const[p,h,a,...x]=e;const fill=p.includes("___");
@@ -497,6 +612,54 @@ function sq(s,pool,step,extra={}){
   for(const x of shuffle(pool)){if(others.length===3)break;if(x[0]===s[0]||seen.has(x[1]))continue;seen.add(x[1]);others.push(x)}
   return mk({k:"mcq",step,ask:"Que veut dire cette phrase ?",prompt:`<div class="sent gr" lang="el">${s[0]}</div>${sayBtn(s[0])}`,opts:choice(s[1],others.map(o=>o[1])),answered:null,say:s[0],unit:s[2],fb:`${G(s[0])} <span class="tr">${s[1]}</span>`,remake:()=>sq(s,pool,step)},extra);
 }
+/* ---------- Écrire en grec ---------- */
+function writeQ(w,step,extra={}){
+  return Object.assign({k:"write",step,item:w,unit:w.unit,val:"",checked:null,res:null,hint:false,native:false,pend:false,say:w.say||w.gr,remake:()=>writeQ(w,step)},extra);
+}
+// comparaison tolérante : majuscules, σ/ς, ponctuation, article (ο, η, το…) ; accents optionnels
+function gnorm(s,accents){
+  s=(s||"").toLowerCase().normalize("NFD");
+  if(!accents)s=s.replace(/[̀-ͯ]/g,"");
+  return s.normalize("NFC").replace(/ς/g,"σ").replace(/[;;.,!?·…«»"'’()]/g," ").replace(/\s+/g," ").trim().replace(/^(ο|η|το|οι|τα) /,"");
+}
+function lev(a,b){const d=Array.from({length:a.length+1},(_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;
+  for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[a.length][b.length]}
+function gradeWrite(a,e){
+  if(!a.trim())return"ko";
+  if(gnorm(a,true)===gnorm(e,true))return"ok";
+  if(gnorm(a)===gnorm(e))return"accent";
+  if(gnorm(e).length>=5&&lev(gnorm(a),gnorm(e))<=1)return"typo";
+  return"ko";
+}
+function checkWrite(){
+  const s=cur();if(s.k!=="write"||s.checked!=null)return;
+  s.res=gradeWrite(s.val,s.item.gr);s.checked=s.res!=="ko";
+  record(s,s.checked);
+  if(!s.checked&&!s.noRetry)insertRetry(s.remake());
+  speak(s.say);render();
+}
+const ACC={"α":"ά","ε":"έ","η":"ή","ι":"ί","ο":"ό","υ":"ύ","ω":"ώ"},UNACC=Object.fromEntries(Object.entries(ACC).map(([a,b])=>[b,a]));
+const KB=[["ς","ε","ρ","τ","υ","θ","ι","ο","π"],["α","σ","δ","φ","γ","η","ξ","κ","λ"],["ζ","χ","ψ","ω","β","ν","μ"]];
+function keyboardHTML(s){
+  return`<div class="kb" role="group" aria-label="Clavier grec">${KB.map((r,i)=>`<div class="kr">${r.map(k=>`<button class="kk gr" lang="el" data-a="key" data-v="${k}">${k}</button>`).join("")}${i===2?`<button class="kk back" data-a="kback" aria-label="Effacer">⌫</button>`:""}</div>`).join("")}
+    <div class="kr"><button class="kk acc${s.pend?" on":""}" data-a="kacc" aria-pressed="${s.pend}">´ accent</button><button class="kk space" data-a="key" data-v=" ">espace</button></div></div>`;
+}
+function syncWr(){const s=cur(),el=document.getElementById("wr");if(el)el.value=s.val;const a=app.querySelector(".kk.acc");if(a){a.classList.toggle("on",s.pend);a.setAttribute("aria-pressed",s.pend)}}
+function typeKey(k){
+  const s=cur();if(s.k!=="write"||s.checked!=null)return;
+  if(s.pend&&ACC[k]){k=ACC[k];s.pend=false}
+  s.val+=k;syncWr();
+}
+function typeAccent(){
+  const s=cur();if(s.k!=="write"||s.checked!=null)return;
+  const last=s.val.slice(-1);
+  if(ACC[last])s.val=s.val.slice(0,-1)+ACC[last];
+  else if(UNACC[last])s.val=s.val.slice(0,-1)+UNACC[last];
+  else s.pend=!s.pend; // l’accent s’appliquera à la prochaine voyelle
+  syncWr();
+}
+const escHTML=t=>(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+
 function oq(s,step){const words=s[0].split(" ");return{k:"order",step,s,words,tiles:shuffle(words.map((_,i)=>i)),picked:[],checked:null,remake:()=>oq(s,step)}}
 const sec=(step,title,text)=>({k:"sec",step,title,text});
 
@@ -530,8 +693,14 @@ function buildUnit(u){
   }
   sc.push(sec("Vocabulaire","Nouveaux mots",`${u.words.length} mots à découvrir. Répétez chacun à voix haute après l’avoir écouté.`));
   u.words.forEach((w,i)=>sc.push({k:"teach",step:"Vocabulaire",w,i,n:u.words.length}));
-  const q=[];u.words.forEach((w,i)=>{q.push(wq(w,"gr2fr","Vocabulaire"));q.push(wq(w,(elVoice&&i%2)?"listen":"fr2gr","Vocabulaire"))});
+  const q=[];u.words.forEach((w,i)=>{
+    const p=canPic(w);
+    q.push(wq(w,p&&i%2===0?"img2gr":"gr2fr","Vocabulaire"));
+    q.push(wq(w,p&&i%2?"gr2img":(elVoice&&i%2)?"listen":"fr2gr","Vocabulaire"));
+  });
   sc.push(...spread(q));
+  // pour finir le vocabulaire : écrire 3 mots courts, avec indice de prononciation
+  sc.push(...shuffle(u.words.filter(w=>w.gr.length<=14)).slice(0,3).map(w=>writeQ(w,"Vocabulaire")));
   sc.push({k:"gram",step:"Grammaire",g:u.g});
   shuffle(u.ex).forEach(e=>sc.push(gq(e,"Grammaire",{unit:u.id})));
   sc.push(sec("Phrases","Construire des phrases","Remettez les mots dans l’ordre pour traduire chaque phrase."));
@@ -626,6 +795,8 @@ function buildPractice(cfg){
   if(cfg.mode==="words")q=wordQs(P.items,n,anyType,X);
   else if(cfg.mode==="weak")q=wordQs(weakItems(P.items),n,anyType,X);
   else if(cfg.mode==="listen")q=wordQs(P.items.filter(i=>!i.letter),n,listen,X,1);
+  else if(cfg.mode==="write")q=wordQs(P.items.filter(i=>!i.letter),n,()=>["write"],X,1);
+  else if(cfg.mode==="img")q=wordQs(P.items.filter(i=>!i.letter&&canPic(i)),n,()=>["img2gr","gr2img"],X,2);
   else if(cfg.mode==="gram"){
     const g=gram(Math.ceil(n/2));q=[...g,...sents(n-g.length)];
     if(q.length<n)q.push(...gram(n-q.length).filter(x=>!g.some(y=>y.prompt===x.prompt)));
@@ -753,7 +924,7 @@ function finishPlacement(start,all){
    ===================================================================== */
 const app=document.getElementById("app");
 function go(v){V=v;render();window.scrollTo(0,0)}
-function render(){({home:renderHome,session:renderSession,result:renderResult,notes:renderNotes,sync:renderSync,practice:renderPractice})[V]()}
+function render(){({home:renderHome,session:renderSession,result:renderResult,notes:renderNotes,sync:renderSync,practice:renderPractice,stats:renderStats})[V]()}
 
 function streakText(){
   const s=currentStreak();
@@ -822,6 +993,7 @@ function renderHome(){
   <section class="today">${block}</section>
   ${rev}
   ${prac}
+  <section class="row"><div><h3>Vos progrès</h3><p>Jours d’étude, mots appris et points faibles</p></div><button class="btn ghost" data-a="stats">Voir</button></section>
   <section class="row"><div><h3>Fiches</h3><p>L’alphabet et toutes les règles de grammaire vues</p></div><button class="btn ghost" data-a="notes">Ouvrir</button></section>
   <section class="row"><div><h3>Sauvegarde et transfert</h3><p>Déplacer votre progression vers un autre navigateur ou appareil</p></div><button class="btn ghost" data-a="sync">Ouvrir</button></section>
   ${path}
@@ -844,6 +1016,7 @@ function renderSession(){
   }else if(s.k==="teach"){
     const w=s.w;
     body=`<p class="ask">${w.letter?"Nouvelle lettre":"Nouveau mot"}, ${s.i+1} sur ${s.n}</p>
+      ${w.pk?`<div class="pic sm${w.num?" n":""}" aria-hidden="true">${picHTML(w)}</div>`:""}
       <div class="big gr" lang="el">${w.gr}</div><p class="tr-big">${w.tr}</p>
       <p class="fr-big">${w.letter?"se prononce « "+w.fr+" »":w.fr}</p>${sayBtn(w.say||w.gr)}
       <div class="foot"><button class="btn wide" data-a="cont">Suivant</button></div>`;
@@ -859,7 +1032,7 @@ function renderSession(){
     let fb="";
     if(done){const ok=s.opts[s.answered].ok;
       fb=`<div class="fb ${ok?"ok":"ko"}" role="status"><div><strong>${ok?"Exact":"Pas tout à fait"}</strong><div class="fb-word">${s.fb}</div></div><button class="btn wide" data-a="cont">Continuer</button></div>`}
-    body=`<p class="ask">${s.ask}</p>${s.prompt}<div class="opts">${opts}</div>${fb}`;
+    body=`<p class="ask">${s.ask}</p>${s.prompt}<div class="opts${s.grid?" grid4":""}">${opts}</div>${fb}`;
     if(s.auto&&!done&&!s.spoken){s.spoken=true;setTimeout(()=>speak(s.auto),300)}
   }else if(s.k==="order"){
     const built=s.picked.map((wi,pi)=>s.checked==null?`<button class="wt" data-a="unpick" data-v="${pi}">${s.words[wi]}</button>`:`<span class="wt">${s.words[wi]}</span>`).join("");
@@ -870,6 +1043,23 @@ function renderSession(){
       <div class="built ${s.checked==null?"":s.checked?"ok":"ko"}" aria-label="Votre phrase">${built}</div>
       <div class="bank">${bank}</div>
       ${s.checked==null?`<div class="foot"><button class="btn wide" data-a="check" ${s.picked.length===s.words.length?"":"disabled"}>Vérifier</button></div>`:fb}`;
+  }else if(s.k==="write"){
+    const w=s.item,done=s.checked!=null;
+    let fb="";
+    if(done){
+      const t={ok:"Exact",accent:"Exact, mais attention à l’accent",typo:"Presque parfait, une petite faute",ko:s.val.trim()?"Pas tout à fait":"La réponse était"}[s.res];
+      fb=`<div class="fb ${s.checked?"ok":"ko"}" role="status"><div><strong>${t}</strong>
+        <div class="fb-word">${PIC[w.gr]?`<span class="fbp" aria-hidden="true">${PIC[w.gr]}</span> `:""}${G(w.gr)} <span class="tr">${w.tr}</span> : ${w.fr}</div>
+        ${s.res!=="ok"&&s.val.trim()?`<p class="yours">Vous avez écrit : ${G(escHTML(s.val))}</p>`:""}</div>
+        ${sayBtn(s.say)}<button class="btn wide" data-a="cont">Continuer</button></div>`;
+    }
+    body=`<p class="ask">Écrivez en grec</p>
+      ${w.pk?`<div class="pic sm${w.num?" n":""}" aria-hidden="true">${picHTML(w)}</div>`:""}
+      <div class="fr-big">${w.fr}</div>
+      <input id="wr" class="wr gr${done?(s.checked?" ok":" ko"):""}" lang="el" inputmode="${s.native?"text":"none"}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Votre réponse en grec" value="${escHTML(s.val)}" ${done?"readonly":""}>
+      ${done?fb:`<div class="wtools">${s.hint?`<span class="hint">Prononciation : <i>${w.tr}</i></span>`:`<button class="link" data-a="whint">Indice</button>`}<button class="link" data-a="widk">Je ne sais pas</button><button class="link" data-a="wnative">${s.native?"Clavier de l’app":"Clavier du téléphone"}</button></div>
+        ${s.native?"":keyboardHTML(s)}
+        <div class="foot"><button class="btn wide" data-a="wcheck">Vérifier</button></div>`}`;
   }else if(s.k==="dlg"){
     const lines=s.lines.map(l=>`<div class="ln"><p class="sp">${l[0]}</p><button class="lg gr" lang="el" data-a="say" data-v="${l[1]}">${l[1]}</button>${s.show?`<p class="lf">${l[2]}</p>`:""}</div>`).join("");
     body=`<p class="ask">Lisez le dialogue. Touchez une réplique pour l’écouter, puis essayez de comprendre sans la traduction.</p>
@@ -879,7 +1069,8 @@ function renderSession(){
   }
   app.innerHTML=head+body;
   const c=app.querySelector('[data-a="cont"]');
-  if(c&&(s.k==="mcq"||s.k==="order")){c.focus({preventScroll:true});c.scrollIntoView({block:"nearest",behavior:"smooth"})}
+  if(c&&(s.k==="mcq"||s.k==="order"||s.k==="write")){c.focus({preventScroll:true});c.scrollIntoView({block:"nearest",behavior:"smooth"})}
+  if(s.k==="write"&&s.checked==null&&s.native){const el=document.getElementById("wr");if(el){el.focus();const n=el.value.length;try{el.setSelectionRange(n,n)}catch(e){}}}
 }
 
 function renderResult(){
@@ -903,6 +1094,8 @@ function renderPractice(){
     ["mix","Tout mélanger","Vocabulaire, grammaire et phrases"],
     ["weak","Mots à renforcer",nWeak?`${nWeak} mot${nWeak>1?"s":""} raté${nWeak>1?"s":""} ou encore récent${nWeak>1?"s":""}`:"Aucun pour l’instant, bravo !"],
     ["words","Vocabulaire","Traduire dans les deux sens"],
+    ["write","Écrire en grec","Taper les mots avec le clavier grec"],
+    ["img","Images","Associer les mots et les images"],
     ["gram","Grammaire et phrases","Compléter et construire des phrases"],
     ...(canSpeak&&elVoice?[["listen","Écoute","Reconnaître les mots à l’oral"]]:[])
   ];
@@ -942,6 +1135,119 @@ function renderNotes(){
     <table class="conj">${combos}</table>
     <h2 style="margin-top:28px">Grammaire</h2>
     ${cards||`<p class="muted">Les fiches de grammaire apparaîtront ici au fil des unités.</p>`}`;
+}
+
+/* =====================================================================
+   STATISTIQUES
+   ===================================================================== */
+const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const dayDiff=(a,b)=>Math.round((parseDay(b)-parseDay(a))/864e5);
+const frDate=(k,o={day:"numeric",month:"long"})=>parseDay(k).toLocaleDateString("fr-FR",o);
+function monday(off=0){const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7)+off*7);return d}
+function bestStreak(){
+  let best=0,run=0,prev=null;
+  Object.keys(S.minutes||{}).filter(k=>S.minutes[k]>0).sort().forEach(k=>{run=prev&&dayDiff(prev,k)===1?run+1:1;best=Math.max(best,run);prev=k});
+  return Math.max(best,S.best||0,currentStreak());
+}
+function weekMinutes(off){let m=0;for(let i=0;i<7;i++)m+=S.minutes[today(off*7-i)]||0;return m} // 7 jours glissants : 0 = les 7 derniers jours, -1 = les 7 d’avant
+const fmtDur=m=>m<60?`${m} min`:`${Math.floor(m/60)} h ${String(m%60).padStart(2,"0")}`;
+const bucket=m=>!m?0:m<10?1:m<20?2:m<30?3:4;
+const MEM=[["Nouveaux","vus récemment ou ratés, reviennent demain",c=>c.box<=1],["En cours","reviennent tous les 2 à 4 jours",c=>c.box===2||c.box===3],["Solides","reviennent tous les 8 jours",c=>c.box===4],["Maîtrisés","reviennent tous les 16 à 32 jours",c=>c.box>=5]];
+let LINE=null; // points du graphique, pour l’affichage au toucher
+
+function wordsSeries(){
+  const ev={};
+  UNITS.forEach(u=>{const st=S.units[u.id];if(!st?.done||!st.date)return;const n=u.items.filter(i=>S.cards[i.id]).length;if(n)ev[st.date]=(ev[st.date]||0)+n});
+  const ds=Object.keys(ev).sort();if(!ds.length)return[];
+  const out=[];let cum=0;const span=dayDiff(ds[0],today());
+  for(let i=0;i<=span;i++){const d=parseDay(ds[0]);d.setDate(d.getDate()+i);const k=ymd(d);cum+=ev[k]||0;out.push([k,cum])}
+  return out;
+}
+function lineChart(pts){
+  const W=350,H=170,L=34,R=40,T=14,B=26,max=Math.max(10,Math.ceil(pts[pts.length-1][1]/(pts[pts.length-1][1]>100?50:10))*(pts[pts.length-1][1]>100?50:10));
+  const x=i=>L+(pts.length===1?0:i*(W-L-R)/(pts.length-1)),y=v=>T+(H-T-B)*(1-v/max);
+  const path=pts.map((p,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(p[1]).toFixed(1)}`).join("");
+  const area=`${path}L${x(pts.length-1).toFixed(1)},${y(0)}L${x(0)},${y(0)}Z`;
+  const grid=[0,max/2,max].map(v=>`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" class="gl"/><text x="${L-6}" y="${y(v)+4}" class="ax" text-anchor="end">${v}</text>`).join("");
+  const last=pts[pts.length-1],lx=x(pts.length-1),ly=y(last[1]);
+  LINE={pts,x,y,L,R,W};
+  return`<svg id="wl" viewBox="0 0 ${W} ${H}" class="lc" role="img" aria-label="Mots et lettres appris : ${pts[0][1]} le ${frDate(pts[0][0])}, ${last[1]} aujourd’hui">
+    ${grid}<path d="${area}" class="la"/><path d="${path}" class="ll"/>
+    <text x="${L}" y="${H-6}" class="ax">${frDate(pts[0][0],{day:"numeric",month:"short"})}</text><text x="${W-R}" y="${H-6}" class="ax" text-anchor="end">aujourd’hui</text>
+    <line id="wlx" class="xh" y1="${T}" y2="${y(0)}" x1="${lx}" x2="${lx}" visibility="hidden"/>
+    <circle cx="${lx}" cy="${ly}" r="4.5" class="ld"/><text x="${lx+8}" y="${ly+5}" class="lv">${last[1]}</text>
+    <circle id="wldot" r="4.5" class="ld" visibility="hidden"/>
+    <rect x="${L}" y="0" width="${W-L-R}" height="${H-B}" fill="transparent"/></svg>`;
+}
+function lineHover(e){
+  const svg=document.getElementById("wl");if(!svg||!LINE)return;
+  const r=svg.getBoundingClientRect(),px=(e.clientX-r.left)*LINE.W/r.width,n=LINE.pts.length;
+  const i=Math.max(0,Math.min(n-1,Math.round((px-LINE.L)/((LINE.W-LINE.L-LINE.R)/Math.max(1,n-1)))));
+  const p=LINE.pts[i],X=LINE.x(i),Y=LINE.y(p[1]);
+  const xh=document.getElementById("wlx"),dot=document.getElementById("wldot"),out=document.getElementById("wlout");
+  xh.setAttribute("x1",X);xh.setAttribute("x2",X);xh.setAttribute("visibility","visible");
+  dot.setAttribute("cx",X);dot.setAttribute("cy",Y);dot.setAttribute("visibility","visible");
+  out.innerHTML=`<b>${p[1]}</b> mots et lettres au ${p[0]===today()?"jour d’aujourd’hui":frDate(p[0])}`;
+}
+
+function renderStats(){
+  const cards=Object.values(S.cards),learned=cards.length,cs=currentStreak(),best=bestStreak();
+  const wk=weekMinutes(0),prev=weekMinutes(-1),diff=wk-prev;
+  const studyDays=Object.values(S.minutes||{}).filter(m=>m>0).length;
+  const tile=(label,value,sub)=>`<div class="tile-s"><p class="tl">${label}</p><p class="tv">${value}</p><p class="ts">${sub}</p></div>`;
+  const tiles=`<div class="kpis">
+    ${tile("Série en cours",`${cs} jour${cs>1?"s":""}`,`Record : ${best} jour${best>1?"s":""}`)}
+    ${tile("7 derniers jours",fmtDur(wk),prev?`${diff>0?"↑ "+diff+" min de plus":diff<0?"↓ "+(-diff)+" min de moins":"autant"} que les 7 jours d’avant`:"première semaine")}
+    ${tile("Mots et lettres appris",learned,`dont ${cards.filter(c=>c.box>=5).length} maîtrisés`)}
+    ${tile("Temps d’étude",fmtDur(S.total||0),`sur ${studyDays} jour${studyDays>1?"s":""}`)}
+  </div>`;
+
+  // calendrier des 12 dernières semaines
+  const WEEKS=12,start=monday(-(WEEKS-1)),t=today();let cols="",months="",lastM=-1;
+  for(let w=0;w<WEEKS;w++){
+    const d0=new Date(start);d0.setDate(d0.getDate()+w*7);
+    const sun=new Date(d0);sun.setDate(sun.getDate()+6); // le mois s’affiche sur la semaine qui contient le 1er
+    months+=`<span>${w&&sun.getMonth()!==lastM?sun.toLocaleDateString("fr-FR",{month:"short"}):""}</span>`;lastM=sun.getMonth();
+    let cells="";
+    for(let i=0;i<7;i++){
+      const d=new Date(d0);d.setDate(d.getDate()+i);const k=ymd(d),m=S.minutes[k]||0;
+      cells+=k>t?`<span class="cd fut"></span>`:`<button class="cd b${bucket(m)}${k===t?" now":""}" data-a="calday" data-v="${k}" aria-label="${frDate(k,{weekday:"long",day:"numeric",month:"long"})} : ${m?m+" min":"pas d’étude"}"></button>`;
+    }
+    cols+=`<div class="cw">${cells}</div>`;
+  }
+  const calendar=`<div class="cal"><div class="cm"><span></span>${months}</div>
+    <div class="cg"><div class="cw lab"><span>L</span><span></span><span>M</span><span></span><span>V</span><span></span><span>D</span></div>${cols}</div></div>
+    <div class="cleg"><span>Moins</span>${[0,1,2,3,4].map(b=>`<span class="cd b${b}" aria-hidden="true"></span>`).join("")}<span>Plus</span></div>
+    <p class="readout" id="calout">Touchez un jour pour voir le détail. Une case pleine : 30 min ou plus.</p>`;
+
+  // solidité de la mémoire
+  const counts=MEM.map(m=>cards.filter(m[2]).length),tot=counts.reduce((a,b)=>a+b,0)||1;
+  const memory=`<div class="seg" role="img" aria-label="${MEM.map((m,i)=>m[0]+" : "+counts[i]).join(", ")}">${counts.map((c,i)=>c?`<span class="m${i}" style="flex:${c}"></span>`:"").join("")}</div>
+    <ul class="mlist">${MEM.map((m,i)=>`<li><span class="sw m${i}" aria-hidden="true"></span><span class="mn"><b>${m[0]}</b><span>${m[1]}</span></span><span class="mc">${counts[i]}</span></li>`).join("")}</ul>`;
+
+  // mots appris dans le temps
+  const pts=wordsSeries();LINE=null;
+  const growth=pts.length>=3?`${lineChart(pts)}<p class="readout" id="wlout">Touchez le graphique pour voir un jour précis.</p>`
+    :`<p class="muted">Le graphique apparaîtra après quelques jours d’étude.</p>`;
+
+  // points faibles
+  const missed=Object.entries(S.cards).filter(([id,c])=>c.miss&&ITEMS[id]).sort((a,b)=>b[1].miss-a[1].miss||a[1].box-b[1].box).slice(0,8);
+  const weakU=UNITS.filter(u=>typeof S.units[u.id]?.score==="number"&&S.units[u.id].score<.85).sort((a,b)=>S.units[a.id].score-S.units[b.id].score).slice(0,3);
+  const weak=`${missed.length?`<ul class="wlist">${missed.map(([id,c])=>{const w=ITEMS[id];return`<li><button class="wbtn" data-a="say" data-v="${w.say||w.gr}" aria-label="Écouter ${w.tr}">${PIC[w.gr]?`<span class="fbp">${PIC[w.gr]}</span>`:""}<span class="gr" lang="el">${w.gr}</span></button><span class="wfr">${w.fr}</span><span class="wn">${c.miss} erreur${c.miss>1?"s":""}</span></li>`}).join("")}</ul>`
+      :`<p class="muted">Les mots que vous ratez apparaîtront ici, avec le nombre d’erreurs.</p>`}
+    ${weakU.length?`<h3 class="sub">Unités les moins réussies</h3><ul class="wlist">${weakU.map(u=>`<li><span class="wfr"><b>${u.id}</b> ${u.t}</span><span class="wn">${pct(S.units[u.id].score)}</span><button class="link" data-a="unit" data-v="${u.id}">Refaire</button></li>`).join("")}</ul>`:""}
+    <div class="actions"><button class="btn" data-a="pweak">S’entraîner sur les mots à renforcer</button></div>`;
+
+  app.innerHTML=`
+  <div class="bar"><button class="x" data-a="home" aria-label="Retour à l’accueil">✕</button></div>
+  <h1 class="page-title">Vos progrès</h1>
+  ${tiles}
+  <section class="st"><h2>Jours d’étude</h2><p class="muted">Les 12 dernières semaines</p>${calendar}</section>
+  <section class="st"><h2>Mots appris</h2><p class="muted">Mots et lettres, depuis le début</p>${growth}</section>
+  <section class="st"><h2>Solidité de la mémoire</h2><p class="muted">Plus un mot est solide, moins il revient souvent en révision.</p>${memory}</section>
+  <section class="st"><h2>Points faibles</h2>${weak}</section>`;
+  const svg=document.getElementById("wl");
+  if(svg){svg.addEventListener("pointermove",lineHover);svg.addEventListener("pointerdown",lineHover)}
 }
 
 /* =====================================================================
@@ -1064,6 +1370,16 @@ const ACTIONS={
   say:v=>speak(v),
   sayall:()=>speakAll(cur().lines.map(l=>l[1])),
   toggle:()=>{const s=cur();s.show=!s.show;render()},
+  key:v=>typeKey(v),
+  kback:()=>{const s=cur();if(s.k==="write"&&s.checked==null){s.val=s.val.slice(0,-1);s.pend=false;syncWr()}},
+  kacc:typeAccent,
+  wcheck:checkWrite,
+  widk:()=>{const s=cur();if(s.k==="write"){s.val="";checkWrite()}},
+  whint:()=>{cur().hint=true;render()},
+  wnative:()=>{const s=cur();s.native=!s.native;render()},
+  stats:()=>go("stats"),
+  calday:v=>{const o=document.getElementById("calout"),m=S.minutes[v]||0;if(o)o.innerHTML=`<b>${frDate(v,{weekday:"long",day:"numeric",month:"long"})}</b> : ${m?m+" min d’étude":"pas d’étude ce jour-là"}`},
+  pweak:()=>{S.pp=Object.assign({},PRACTICE_DEFAULT,S.pp,{mode:"weak",scope:"all"});save();startPractice()},
   practice:()=>go("practice"),
   pmode:v=>{S.pp=Object.assign({},PRACTICE_DEFAULT,S.pp,{mode:v});save();render()},
   plen:v=>{S.pp=Object.assign({},PRACTICE_DEFAULT,S.pp,{len:+v});save();render()},
@@ -1076,6 +1392,7 @@ const ACTIONS={
   reset:()=>{if(confirm("Effacer toute votre progression ? Cette action est définitive.")){S=fresh();save();go("home")}}
 };
 app.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b||b.disabled)return;const f=ACTIONS[b.dataset.a];if(f)f(b.dataset.v)});
+app.addEventListener("input",e=>{if(e.target.id==="wr"&&V==="session"){const s=cur();if(s.k==="write"&&s.checked==null)s.val=e.target.value}});
 app.addEventListener("change",e=>{
   if(e.target.id==="pscope"){S.pp=Object.assign({},PRACTICE_DEFAULT,S.pp,{scope:e.target.value});save();render();return}
   if(e.target.id!=="file"||!e.target.files||!e.target.files[0])return;
@@ -1087,6 +1404,7 @@ document.addEventListener("keydown",e=>{
   if(s.k==="mcq"&&s.answered==null&&/^[1-5]$/.test(e.key)){answer(+e.key-1);e.preventDefault();return}
   if(e.key==="Enter"&&!onBtn){
     if(s.k==="order"&&s.checked==null)checkOrder();
+    else if(s.k==="write"&&s.checked==null)checkWrite();
     else if(s.k!=="mcq"||s.answered!=null)advance();
     e.preventDefault();
   }
