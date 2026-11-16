@@ -160,6 +160,20 @@ details{border-bottom:1px solid var(--line);padding:4px 0}
 summary{cursor:pointer;padding:12px 0;font-weight:500}
 .page-title{font-size:26px;margin:4px 0 6px}
 
+/* Sauvegarde et transfert */
+.sync{padding:22px 0;border-top:1px solid var(--line)}
+.sync:first-of-type{margin-top:18px}
+.sync h2{font-size:20px;margin-bottom:4px}
+textarea.code{display:block;width:100%;min-height:96px;margin-top:14px;padding:12px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font:16px/1.4 ui-monospace,Menlo,monospace;word-break:break-all;resize:vertical}
+textarea.code:focus{border-color:var(--blue);outline:none}
+.msg{margin:14px 0 0;padding:12px 14px;border-radius:12px;font-size:16px}
+.msg.ok{background:var(--right-soft);color:var(--ink)}
+.msg.ko{background:var(--wrong-soft);color:var(--ink)}
+.howto{margin:8px 0 0;padding-left:22px}
+.howto li{margin:8px 0}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+.other{margin-top:18px}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -642,7 +656,7 @@ function finishPlacement(start,all){
    ===================================================================== */
 const app=document.getElementById("app");
 function go(v){V=v;render();window.scrollTo(0,0)}
-function render(){({home:renderHome,session:renderSession,result:renderResult,notes:renderNotes})[V]()}
+function render(){({home:renderHome,session:renderSession,result:renderResult,notes:renderNotes,sync:renderSync})[V]()}
 
 function streakText(){
   const s=currentStreak();
@@ -666,6 +680,7 @@ function renderWelcome(){
     <p>Un court examen mesure votre niveau et vous place au bon endroit du parcours. Il dure 5 minutes au plus.</p>
     <div class="actions"><button class="btn" data-a="placement">Passer l’examen de niveau</button><button class="link" data-a="beginner">Je débute complètement</button></div>
   </section>
+  <section class="row"><div><h3>Vous avez déjà une progression ?</h3><p>Récupérez-la depuis Chrome, Safari ou un autre appareil.</p></div><button class="btn ghost" data-a="sync">Importer</button></section>
   <p class="muted">Chaque séance suit le même fil : échauffement, nouveaux mots, grammaire, phrases, dialogue, puis un bilan qui adapte la suite. Un examen valide chaque niveau.</p>`;
 }
 
@@ -708,6 +723,7 @@ function renderHome(){
   <section class="today">${block}</section>
   ${rev}
   <section class="row"><div><h3>Fiches</h3><p>L’alphabet et toutes les règles de grammaire vues</p></div><button class="btn ghost" data-a="notes">Ouvrir</button></section>
+  <section class="row"><div><h3>Sauvegarde et transfert</h3><p>Déplacer votre progression vers un autre navigateur ou appareil</p></div><button class="btn ghost" data-a="sync">Ouvrir</button></section>
   ${path}
   <footer>
     <span>${learned} mots et lettres appris, ${S.total||0} min d’étude au total.</span>
@@ -794,6 +810,104 @@ function renderNotes(){
 }
 
 /* =====================================================================
+   SAUVEGARDE ET TRANSFERT
+   Chaque navigateur (Chrome, Safari, app de l’écran d’accueil) garde
+   sa propre copie. Un code texte permet de passer de l’un à l’autre.
+   ===================================================================== */
+let SYNC={};
+const hasProgress=st=>Object.keys(st.cards||{}).length>0||Object.values(st.units||{}).some(u=>u&&u.done);
+function summary(st){
+  if(!hasProgress(st))return"aucune progression";
+  const w=Object.keys(st.cards||{}).length,u=Object.values(st.units||{}).filter(x=>x&&x.done).length,m=st.total||0;
+  return`${w} mots et lettres, ${u} unité${u>1?"s":""} terminée${u>1?"s":""}, ${m} min d’étude`;
+}
+function encodeState(st){
+  const bytes=new TextEncoder().encode(JSON.stringify(st));let bin="";
+  for(let i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);
+  return"GREC1-"+btoa(bin);
+}
+function decodeState(txt){
+  txt=(txt||"").trim();let json;
+  if(txt.startsWith("{"))json=txt;
+  else{
+    const m=txt.replace(/\s+/g,"").match(/GREC1-([A-Za-z0-9+/=]+)/);if(!m)return null;
+    const bin=atob(m[1]);json=new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0)));
+  }
+  const o=JSON.parse(json);
+  return o&&typeof o==="object"&&o.cards&&typeof o.cards==="object"?o:null;
+}
+function renderSync(){
+  const last=S.lastExport?`Dernière sauvegarde le ${parseDay(S.lastExport).toLocaleDateString("fr-FR",{day:"numeric",month:"long"})}.`:"";
+  const msg=w=>SYNC.where===w&&SYNC.msg?`<p class="msg ${SYNC.kind}" role="status">${SYNC.msg}</p>`:"";
+  const esc=t=>(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+  app.innerHTML=`
+  <div class="bar"><button class="x" data-a="home" aria-label="Retour à l’accueil">✕</button></div>
+  <h1 class="page-title">Sauvegarde et transfert</h1>
+  <p class="muted">Chrome, Safari et l’app de l’écran d’accueil gardent chacun leur propre progression, sans la partager. Un code permet de la déplacer de l’un à l’autre, ou de la mettre de côté.</p>
+  <section class="sync">
+    <h2>Envoyer la progression de cet écran</h2>
+    <p>Ici : ${summary(S)}. ${last}</p>
+    <div class="actions"><button class="btn" data-a="export" ${hasProgress(S)?"":"disabled"}>Copier mon code</button>${hasProgress(S)?`<button class="link" data-a="download">Télécharger un fichier de sauvegarde</button>`:""}</div>
+    ${SYNC.code?`<textarea class="code" readonly aria-label="Votre code de progression">${SYNC.code}</textarea>`:""}
+    ${msg("out")}
+  </section>
+  <section class="sync">
+    <h2>Recevoir une progression</h2>
+    <p>Collez un code copié ailleurs. La progression de cet écran sera remplacée par celle du code.</p>
+    <textarea class="code" id="paste" placeholder="Appui long ici, puis « Coller »" aria-label="Code à importer" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">${esc(SYNC.paste)}</textarea>
+    <div class="actions"><button class="btn" data-a="import">Importer</button><button class="link" data-a="pickfile">Choisir un fichier</button></div>
+    <input type="file" id="file" class="vh" accept=".json,.txt,application/json,text/plain" tabindex="-1" aria-hidden="true">
+    ${msg("in")}
+  </section>
+  <section class="sync">
+    <h2>Sur iPhone, de Chrome vers l’écran d’accueil</h2>
+    <ol class="howto">
+      <li>Ouvrez l’app dans Chrome, puis « Sauvegarde et transfert », et touchez « Copier mon code ».</li>
+      <li>Ouvrez l’app depuis l’écran d’accueil, puis « Importer » (ou « Sauvegarde et transfert ») et touchez « Importer » : le code est collé automatiquement.</li>
+      <li>Ensuite, utilisez seulement l’app de l’écran d’accueil pour que votre progression reste au même endroit.</li>
+    </ol>
+  </section>`;
+}
+async function doExport(){
+  S.lastExport=today();save();
+  const code=encodeState(S);let ok=false;
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(code);ok=true}}catch(e){}
+  SYNC={where:"out",code,kind:ok?"ok":"ko",msg:ok
+    ?"Code copié. Ouvrez l’app là où vous voulez retrouver votre progression, puis touchez « Importer »."
+    :"La copie automatique n’a pas fonctionné. Touchez le code ci-dessus, choisissez « Tout sélectionner », puis « Copier »."};
+  render();
+  if(!ok){const t=app.querySelector("textarea[readonly]");if(t){t.focus();t.select()}}
+}
+function doDownload(){
+  S.lastExport=today();save();
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:"application/json"}));
+  a.download=`grec-progression-${today()}.json`;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},60000);
+  SYNC={where:"out",kind:"ok",msg:"Fichier téléchargé. Gardez-le dans Fichiers : vous pourrez le réimporter avec « Choisir un fichier »."};
+  render();
+}
+async function doImport(txt){
+  if(txt==null){
+    txt=(document.getElementById("paste")||{}).value||"";
+    if(!txt.trim()&&navigator.clipboard&&navigator.clipboard.readText){try{txt=await navigator.clipboard.readText()}catch(e){}}
+  }
+  let data=null;try{data=decodeState(txt)}catch(e){}
+  if(!data){
+    SYNC={where:"in",kind:"ko",paste:txt,msg:txt.trim()
+      ?"Ce code n’est pas reconnu. Vérifiez qu’il a été copié en entier, du début à la fin."
+      :"Aucun code trouvé. Faites un appui long dans la zone ci-dessus, choisissez « Coller », puis touchez « Importer »."};
+    render();return;
+  }
+  if(hasProgress(S)&&!confirm(`Remplacer la progression de cet écran ?\n\nDans le code : ${summary(data)}.\nIci : ${summary(S)}.`))return;
+  S=Object.assign(fresh(),data);
+  if(hasProgress(S))S.placed=true;
+  save();SYNC={};
+  RES={title:"Καλώς ήρθες!",score:"",lines:[`Progression importée : ${summary(S)}.`,"Vous pouvez continuer ici, là où vous en étiez."]};
+  go("result");
+}
+
+/* =====================================================================
    INTERACTIONS
    ===================================================================== */
 const ACTIONS={
@@ -815,9 +929,18 @@ const ACTIONS={
   say:v=>speak(v),
   sayall:()=>speakAll(cur().lines.map(l=>l[1])),
   toggle:()=>{const s=cur();s.show=!s.show;render()},
+  sync:()=>{SYNC={};go("sync")},
+  export:doExport,
+  download:doDownload,
+  import:()=>doImport(),
+  pickfile:()=>{const f=document.getElementById("file");if(f)f.click()},
   reset:()=>{if(confirm("Effacer toute votre progression ? Cette action est définitive.")){S=fresh();save();go("home")}}
 };
 app.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b||b.disabled)return;const f=ACTIONS[b.dataset.a];if(f)f(b.dataset.v)});
+app.addEventListener("change",e=>{
+  if(e.target.id!=="file"||!e.target.files||!e.target.files[0])return;
+  e.target.files[0].text().then(t=>doImport(t)).catch(()=>{SYNC={where:"in",kind:"ko",msg:"Impossible de lire ce fichier."};render()});
+});
 document.addEventListener("keydown",e=>{
   if(V!=="session"||e.metaKey||e.ctrlKey||e.altKey)return;
   const s=cur(),onBtn=e.target.tagName==="BUTTON";
