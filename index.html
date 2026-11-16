@@ -498,31 +498,8 @@ let elVoice=null;
 function pickVoice(){if(canSpeak)elVoice=speechSynthesis.getVoices().find(v=>/^el/i.test(v.lang))||null}
 if(canSpeak){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
 function utter(t){const u=new SpeechSynthesisUtterance(t.replace(/;/g,"").replace(/\(.*?\)/g,""));u.lang="el-GR";if(elVoice)u.voice=elVoice;u.rate=.85;return u}
-/* iPhone : en mode silencieux, la voix est coupée sur le haut-parleur
-   (mais pas dans les écouteurs). On demande une session audio de type
-   « lecture », comme une app de musique, et on joue un court silence
-   au premier toucher pour que iOS bascule le son sur le haut-parleur. */
-const IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-let silentEl=null;
-function silentWav(){
-  const n=800,b=new ArrayBuffer(44+n*2),v=new DataView(b);
-  const w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
-  w(0,"RIFF");v.setUint32(4,36+n*2,true);w(8,"WAVE");w(12,"fmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
-  v.setUint32(24,8000,true);v.setUint32(28,16000,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,"data");v.setUint32(40,n*2,true);
-  return URL.createObjectURL(new Blob([b],{type:"audio/wav"}));
-}
-function audioUnlock(){
-  try{if(navigator.audioSession&&navigator.audioSession.type!=="playback")navigator.audioSession.type="playback"}catch(e){}
-  if(!IOS)return;
-  try{
-    if(!silentEl){silentEl=new Audio(silentWav());silentEl.setAttribute("playsinline","");silentEl.preload="auto"}
-    silentEl.currentTime=0;const p=silentEl.play();if(p&&p.catch)p.catch(()=>{});
-  }catch(e){}
-}
-document.addEventListener("pointerdown",audioUnlock,{capture:true,once:true});
-document.addEventListener("touchend",audioUnlock,{capture:true,once:true});
-function speak(t){if(!canSpeak||!t)return;audioUnlock();speechSynthesis.cancel();speechSynthesis.speak(utter(t))}
-function speakAll(list){if(!canSpeak)return;audioUnlock();speechSynthesis.cancel();list.forEach(t=>speechSynthesis.speak(utter(t)))}
+function speak(t){if(!canSpeak||!t)return;speechSynthesis.cancel();speechSynthesis.speak(utter(t))}
+function speakAll(list){if(!canSpeak)return;speechSynthesis.cancel();list.forEach(t=>speechSynthesis.speak(utter(t)))}
 const ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
 const sayBtn=t=>canSpeak?`<button class="say" data-a="say" data-v="${t}">${ICON} Écouter</button>`:"";
 const playBtn=t=>`<button class="play" data-a="say" data-v="${t}">${ICON} Réécouter</button>`;
