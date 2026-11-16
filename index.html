@@ -109,6 +109,17 @@ footer .link{color:var(--muted);font-size:15px;justify-self:start}
 .opt:disabled{opacity:1}
 .opt.right{border-color:var(--right);background:var(--right-soft)}
 .opt.wrong{border-color:var(--wrong);background:var(--wrong-soft)}
+
+/* Entraînement libre */
+.ph{font-size:18px;margin:26px 0 10px}
+.opts.tight{margin-top:0;gap:8px}
+.opt.pick{font-size:17px;line-height:1.35;padding:12px 16px}
+.opt.pick .muted{font-size:15px}
+.opt.sel,.chip.sel{border-color:var(--blue);background:var(--blue-soft);box-shadow:inset 0 0 0 1px var(--blue)}
+.sel-in{width:100%;min-height:52px;padding:12px 14px;font:inherit;font-size:17px;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:14px}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.chip{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;min-height:56px}
+.chip span{font-size:13px;color:var(--muted)}
 .fb{margin-top:22px;padding:18px;border-radius:18px;display:flex;flex-direction:column;gap:14px}
 .fb.ok{background:var(--right-soft)}
 .fb.ko{background:var(--wrong-soft)}
@@ -380,7 +391,14 @@ function parseDay(s){const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1
 function markActive(){const t=today();if(S.last===t)return;S.streak=(S.last===today(-1))?S.streak+1:1;S.last=t}
 function currentStreak(){return(S.last===today()||S.last===today(-1))?S.streak:0}
 function dueItems(){const t=today();return Object.entries(S.cards).filter(([,c])=>c.due<=t).map(([id])=>ITEMS[id]).filter(Boolean)}
-function grade(it,ok){const c=S.cards[it.id]||{box:1};c.box=ok?Math.min(c.box+1,INTERVALS.length-1):1;c.due=today(INTERVALS[c.box]);S.cards[it.id]=c}
+function grade(it,ok){const c=S.cards[it.id]||{box:1};c.box=ok?Math.min(c.box+1,INTERVALS.length-1):1;if(!ok)c.miss=(c.miss||0)+1;c.due=today(INTERVALS[c.box]);S.cards[it.id]=c}
+/* Entraînement libre : un mot à réviser aujourd’hui compte comme sa révision ;
+   pour les autres, une erreur le fait revenir dès demain, une bonne réponse ne change rien. */
+function practiceGrade(it,ok){
+  const c=S.cards[it.id];if(!c)return;
+  if(c.due<=today()){grade(it,ok);return}
+  if(!ok){c.box=1;c.miss=(c.miss||0)+1;c.due=today(1)}
+}
 function nextTask(){
   for(let li=0;li<LEVELS.length;li++){
     const us=levelUnits(li);
@@ -475,7 +493,8 @@ function gq(e,step,extra={}){
   return mk({k:"mcq",step,ask:fill?"Complétez la phrase":"Choisissez la bonne réponse",prompt,opts:choice(fmt(a),x.map(fmt)),answered:null,say,fb,remake:()=>gq(e,step,{unit:extra.unit})},extra);
 }
 function sq(s,pool,step,extra={}){
-  const others=shuffle(pool.filter(x=>x[0]!==s[0]&&x[1]!==s[1])).slice(0,3);
+  const seen=new Set([s[1]]),others=[];
+  for(const x of shuffle(pool)){if(others.length===3)break;if(x[0]===s[0]||seen.has(x[1]))continue;seen.add(x[1]);others.push(x)}
   return mk({k:"mcq",step,ask:"Que veut dire cette phrase ?",prompt:`<div class="sent gr" lang="el">${s[0]}</div>${sayBtn(s[0])}`,opts:choice(s[1],others.map(o=>o[1])),answered:null,say:s[0],unit:s[2],fb:`${G(s[0])} <span class="tr">${s[1]}</span>`,remake:()=>sq(s,pool,step)},extra);
 }
 function oq(s,step){const words=s[0].split(" ");return{k:"order",step,s,words,tiles:shuffle(words.map((_,i)=>i)),picked:[],checked:null,remake:()=>oq(s,step)}}
@@ -571,6 +590,56 @@ function newSession(mode,sc,extra={}){
 function startUnit(uid){newSession("unit",buildUnit(UBY[uid]),{unit:UBY[uid]})}
 function startExam(li){newSession("exam",buildExam(li),{li})}
 function startReview(){if(dueItems().length)newSession("review",buildReview())}
+
+/* ---------- Entraînement libre ---------- */
+const PRACTICE_DEFAULT={mode:"mix",scope:"all",len:20};
+function practicePool(scope){
+  const us=UNITS.filter(u=>S.units[u.id]?.done&&(scope==="all"||(scope[0]==="L"?String(u.li)===scope.slice(1):u.id===scope)));
+  return{us,
+    items:us.flatMap(u=>u.items).filter(i=>S.cards[i.id]),
+    ex:us.flatMap(u=>u.ex.map(e=>({e,uid:u.id}))),
+    sent:us.flatMap(u=>[...(u.s||[]).map(s=>[s[0],s[1],u.id]),...(u.d||[]).map(l=>[l[1],l[2],u.id])])};
+}
+const weakItems=items=>items.filter(i=>(S.cards[i.id]?.box||1)<=2);
+function byWeakness(items){ // les mots les moins sûrs d’abord, avec un peu de hasard
+  return items.map(i=>{const c=S.cards[i.id]||{box:1};return[c.box-Math.min(c.miss||0,3)*.5+Math.random()*2.5,i]}).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+}
+function wordQs(list,n,types,X,passes=2){ // un mot peut revenir une 2e fois, sous une autre forme
+  const order=byWeakness(list),q=[];
+  for(let pass=0;pass<passes&&q.length<n;pass++)
+    for(const w of order){
+      if(q.length>=n)break;
+      const ts=types(w),k=pass===0?Math.floor(Math.random()*ts.length):(q.find(x=>x.item===w)?.typeIdx+1||0);
+      const s=wq(w,ts[k%ts.length],"Entraînement",X);s.typeIdx=k%ts.length;q.push(s);
+    }
+  return q;
+}
+function buildPractice(cfg){
+  const P=practicePool(cfg.scope),X={practice:true},n=cfg.len,st="Entraînement";
+  const anyType=w=>typesFor(w),listen=()=>["listen"];
+  const gram=k=>shuffle(P.ex).slice(0,k).map(x=>gq(x.e,st,{...X,unit:x.uid}));
+  const sents=k=>{
+    const sp=P.sent.filter(s=>s[0].split(" ").length<=8);
+    return shuffle(P.sent).slice(0,k).map((s,i)=>i%2&&sp.includes(s)?oq(s,st):sq(s,P.sent,st,X));
+  };
+  let q;
+  if(cfg.mode==="words")q=wordQs(P.items,n,anyType,X);
+  else if(cfg.mode==="weak")q=wordQs(weakItems(P.items),n,anyType,X);
+  else if(cfg.mode==="listen")q=wordQs(P.items.filter(i=>!i.letter),n,listen,X,1);
+  else if(cfg.mode==="gram"){
+    const g=gram(Math.ceil(n/2));q=[...g,...sents(n-g.length)];
+    if(q.length<n)q.push(...gram(n-q.length).filter(x=>!g.some(y=>y.prompt===x.prompt)));
+  }else{
+    const g=gram(Math.round(n/4)),s=P.sent.length>=4?sents(Math.round(n/4)):[];
+    q=[...g,...s,...wordQs(P.items,n-g.length-s.length,anyType,X)];
+  }
+  return spread(q).slice(0,n);
+}
+function startPractice(){
+  const cfg=Object.assign({},PRACTICE_DEFAULT,S.pp||{});
+  const sc=buildPractice(cfg);if(!sc.length)return go("practice");
+  newSession("practice",sc,{cfg});
+}
 function startPlacement(){
   newSession("placement",[sec("Examen de niveau","Examen de niveau","Les questions deviennent de plus en plus difficiles et l’examen s’arrête dès qu’il a trouvé votre niveau. Choisissez « Je ne sais pas » plutôt que de deviner."),...placementStage(0)],{stageLi:0,stage:{c:0,t:0}});
 }
@@ -587,6 +656,7 @@ function record(s,ok){
   if(s.place){SES.stage.t++;if(ok)SES.stage.c++}
   if(!ok){const uid=s.unit||(s.item&&s.item.unit);if(uid)SES.err[uid]=(SES.err[uid]||0)+1}
   if(s.srs&&s.item)grade(s.item,ok);
+  if(s.practice&&s.item)practiceGrade(s.item,ok);
 }
 function answer(i){
   const s=cur();if(s.k!=="mcq"||s.answered!=null||!s.opts[i])return;
@@ -615,7 +685,7 @@ function closeSession(countsAsDay){
   markActive();save();return m;
 }
 function finish(){
-  const m=closeSession(SES.mode!=="review");
+  const m=closeSession(SES.mode==="unit"||SES.mode==="exam");
   if(SES.mode==="unit"){
     const u=SES.unit;const sc=SES.bilan.t?SES.bilan.c/SES.bilan.t:1;
     S.units[u.id]={done:true,score:sc,weak:sc<.7,date:today()};
@@ -642,6 +712,10 @@ function finish(){
       RES={title:"Presque",score:pct(sc),lines:["Il faut 75 % pour valider le niveau."]};
     }
     RES.extra=extra;save();
+  }else if(SES.mode==="practice"){
+    const{c,t}=SES.stats;
+    RES={title:"Μπράβο!",score:t?pct(c/t):"",again:true,lines:[`${t} question${t>1?"s":""} en ${m} min.`,
+      t-c?"Les mots ratés reviendront dès demain dans vos révisions.":"Aucune erreur, bravo !"]};
   }else{
     RES={title:"Μπράβο!",score:SES.stats.t?pct(SES.stats.c/SES.stats.t):"",lines:[`Révision terminée en ${m} min.`,"Les mots réussis reviendront plus tard, ceux ratés dès demain."]};
   }
@@ -679,7 +753,7 @@ function finishPlacement(start,all){
    ===================================================================== */
 const app=document.getElementById("app");
 function go(v){V=v;render();window.scrollTo(0,0)}
-function render(){({home:renderHome,session:renderSession,result:renderResult,notes:renderNotes,sync:renderSync})[V]()}
+function render(){({home:renderHome,session:renderSession,result:renderResult,notes:renderNotes,sync:renderSync,practice:renderPractice})[V]()}
 
 function streakText(){
   const s=currentStreak();
@@ -720,12 +794,14 @@ function renderHome(){
       :UBY[t.uid].alpha?"Lettres, règles de lecture et premiers mots.":"Vocabulaire, grammaire, phrases, dialogue et bilan.";
     const skip=t.redo?`<button class="link" data-a="exam" data-v="${t.li}">Passer directement à l’examen</button>`:"";
     block=S.dayDone===today()
-      ?`<h2>Séance du jour terminée</h2><p>${mins} min aujourd’hui. Prochaine étape : ${taskLabel(t)}.</p><div class="actions"><button class="btn ghost" data-a="today">Continuer quand même</button></div>`
+      ?`<h2>Séance du jour terminée</h2><p>${mins} min aujourd’hui. Prochaine étape : ${taskLabel(t)}.</p><p>Envie d’en faire plus ? Entraînez-vous sur ce que vous avez appris, ou avancez dans le parcours.</p><div class="actions"><button class="btn" data-a="practice">S’entraîner</button><button class="link" data-a="today">Commencer l’étape suivante</button></div>`
       :`<p class="kicker">Séance du jour, environ 15 min</p><h2>${taskLabel(t)}</h2><p>${sub}</p><div class="actions"><button class="btn" data-a="today">Commencer la séance</button>${skip}</div>`;
   }
   const rev=learned?(due.length
     ?`<section class="row"><div><h3>Révision</h3><p>${due.length} mot${due.length>1?"s":""} à revoir aujourd’hui</p></div><button class="btn ghost" data-a="review">Réviser</button></section>`
     :`<section class="row"><div><h3>Révision</h3><p>Rien à revoir aujourd’hui. Prochaine révision ${nextReviewText()}.</p></div></section>`):"";
+  const prac=UNITS.some(u=>S.units[u.id]?.done)
+    ?`<section class="row"><div><h3>S’entraîner</h3><p>Autant de séries que vous voulez, sur ce que vous avez déjà appris</p></div><button class="btn ghost" data-a="practice">Choisir</button></section>`:"";
   const path=LEVELS.map((L,li)=>{
     const ex=S.exams[li],us=levelUnits(li),allDone=us.every(u=>S.units[u.id]?.done);
     const rows=us.map(u=>{
@@ -745,6 +821,7 @@ function renderHome(){
   <header class="hello"><h1 class="word gr" lang="el">${g[0]}</h1><p class="sub">${g[1]}</p><p class="streak">${streakText()}</p></header>
   <section class="today">${block}</section>
   ${rev}
+  ${prac}
   <section class="row"><div><h3>Fiches</h3><p>L’alphabet et toutes les règles de grammaire vues</p></div><button class="btn ghost" data-a="notes">Ouvrir</button></section>
   <section class="row"><div><h3>Sauvegarde et transfert</h3><p>Déplacer votre progression vers un autre navigateur ou appareil</p></div><button class="btn ghost" data-a="sync">Ouvrir</button></section>
   ${path}
@@ -812,7 +889,42 @@ function renderResult(){
     ${RES.lines.map(l=>`<p>${l}</p>`).join("")}
     ${RES.extra||""}
     <p class="streak">${streakText()}</p>
-    <div class="actions"><button class="btn" data-a="home">Retour à l’accueil</button></div></section>`;
+    <div class="actions">${RES.again
+      ?`<button class="btn" data-a="pstart">Encore une série</button><button class="btn ghost" data-a="practice">Changer de thème</button><button class="link" data-a="home">Retour à l’accueil</button>`
+      :`<button class="btn" data-a="home">Retour à l’accueil</button>`}</div></section>`;
+}
+
+function renderPractice(){
+  const pp=S.pp=Object.assign({},PRACTICE_DEFAULT,S.pp||{});
+  const done=UNITS.filter(u=>S.units[u.id]?.done);
+  if(!done.some(u=>u.id===pp.scope)&&!(pp.scope[0]==="L"&&done.some(u=>"L"+u.li===pp.scope)))pp.scope="all";
+  const P=practicePool(pp.scope),nWeak=weakItems(P.items).length;
+  const modes=[
+    ["mix","Tout mélanger","Vocabulaire, grammaire et phrases"],
+    ["weak","Mots à renforcer",nWeak?`${nWeak} mot${nWeak>1?"s":""} raté${nWeak>1?"s":""} ou encore récent${nWeak>1?"s":""}`:"Aucun pour l’instant, bravo !"],
+    ["words","Vocabulaire","Traduire dans les deux sens"],
+    ["gram","Grammaire et phrases","Compléter et construire des phrases"],
+    ...(canSpeak&&elVoice?[["listen","Écoute","Reconnaître les mots à l’oral"]]:[])
+  ];
+  if(!modes.some(m=>m[0]===pp.mode))pp.mode="mix";
+  const levels=[...new Set(done.map(u=>u.li))];
+  const scopes=`<option value="all">Tout ce que j’ai appris</option>`+levels.map(li=>
+    `<optgroup label="Niveau ${li} : ${LEVELS[li].name}"><option value="L${li}">Tout le niveau ${li}</option>${done.filter(u=>u.li===li).map(u=>`<option value="${u.id}">${u.id} : ${u.t}</option>`).join("")}</optgroup>`).join("");
+  const n=buildPractice(pp).length;
+  const lens=[[10,"Courte","10 questions"],[20,"Normale","20 questions"],[30,"Longue","30 questions"]];
+  app.innerHTML=`
+  <div class="bar"><button class="x" data-a="home" aria-label="Retour à l’accueil">✕</button></div>
+  <h1 class="page-title">S’entraîner</h1>
+  <p class="muted">Autant de séries que vous voulez. Les mots que vous ratez reviendront dès demain dans vos révisions ; la séance du jour n’est pas modifiée.</p>
+  <h2 class="ph">Quoi ?</h2>
+  <div class="opts tight">${modes.map(([v,t,d])=>`<button class="opt pick${pp.mode===v?" sel":""}" data-a="pmode" data-v="${v}" aria-pressed="${pp.mode===v}"><span><b>${t}</b><br><span class="muted">${d}</span></span></button>`).join("")}</div>
+  <h2 class="ph"><label for="pscope">Sur quel contenu ?</label></h2>
+  <select id="pscope" class="sel-in">${scopes.replace(`value="${pp.scope}"`,`value="${pp.scope}" selected`)}</select>
+  <h2 class="ph">Combien ?</h2>
+  <div class="chips">${lens.map(([v,t,d])=>`<button class="chip${pp.len===v?" sel":""}" data-a="plen" data-v="${v}" aria-pressed="${pp.len===v}"><b>${t}</b><span>${d}</span></button>`).join("")}</div>
+  ${n&&n<pp.len?`<p class="muted">Ce choix contient ${n} question${n>1?"s":""} pour l’instant.</p>`:""}
+  ${n?"":`<p class="msg ko">Rien à travailler avec ce choix. Essayez un autre thème ou « Tout mélanger ».</p>`}
+  <div class="foot"><button class="btn wide" data-a="pstart" ${n?"":"disabled"}>Commencer</button></div>`;
 }
 
 function renderNotes(){
@@ -952,6 +1064,10 @@ const ACTIONS={
   say:v=>speak(v),
   sayall:()=>speakAll(cur().lines.map(l=>l[1])),
   toggle:()=>{const s=cur();s.show=!s.show;render()},
+  practice:()=>go("practice"),
+  pmode:v=>{S.pp=Object.assign({},PRACTICE_DEFAULT,S.pp,{mode:v});save();render()},
+  plen:v=>{S.pp=Object.assign({},PRACTICE_DEFAULT,S.pp,{len:+v});save();render()},
+  pstart:startPractice,
   sync:()=>{SYNC={};go("sync")},
   export:doExport,
   download:doDownload,
@@ -961,6 +1077,7 @@ const ACTIONS={
 };
 app.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b||b.disabled)return;const f=ACTIONS[b.dataset.a];if(f)f(b.dataset.v)});
 app.addEventListener("change",e=>{
+  if(e.target.id==="pscope"){S.pp=Object.assign({},PRACTICE_DEFAULT,S.pp,{scope:e.target.value});save();render();return}
   if(e.target.id!=="file"||!e.target.files||!e.target.files[0])return;
   e.target.files[0].text().then(t=>doImport(t)).catch(()=>{SYNC={where:"in",kind:"ko",msg:"Impossible de lire ce fichier."};render()});
 });
